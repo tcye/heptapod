@@ -1,52 +1,53 @@
 
-#include <asio.hpp>
-#include <memory>
 #include <iostream>
-#include <functional>
 #include <thread>
 
-class EchoClient
-    : private asio::noncopyable,
-      public std::enable_shared_from_this<EchoClient> {
- public:
-  using SelfType = EchoClient;
+#include "heptapod.h"
 
-  EchoClient(asio::io_service& service) : service_(service), socket_(service) {}
+class EchoClient : private hpt::noncopyable, public std::enable_shared_from_this<EchoClient> {
+public:
+    using SelfType = EchoClient;
 
-  asio::io_service& GetIoService() { return service_; }
+    EchoClient() {
+        _service = std::make_shared<hpt::IOService>();
+        _socket = std::make_shared<hpt::Socket>(*_service);
+    }
 
-  void TryConnect(asio::ip::tcp::endpoint endpoint) {
-    socket_.async_connect(endpoint, std::bind(&SelfType::OnConnect, shared_from_this(), std::placeholders::_1));
-  }
+    hpt::IOService& GetIOService() { return *_service; }
 
-  void OnConnect(const asio::error_code& ec) {
-    if (ec)
-      std::cerr << "Connect Error: " << ec << std::endl;
-      return;
+    void TryConnect(hpt::EndPoint endpoint) {
+        _socket->async_connect(endpoint, MEM_FN(OnConnect, _1));
+    }
 
+    void OnConnect(const asio::error_code& ec) {
+        if (ec) {
+            std::cerr << "Connect Error: " << ec << std::endl;
+            return;
+        }
+    }
 
-  }
+    void Run() {
+        _service->run();
+    }
 
- private:
-  asio::io_service& service_;
-  asio::ip::tcp::socket socket_;
-
+private:
+    hpt::IOServicePtr _service;
+    hpt::SocketPtr _socket;
 };
 
+using EchoClientPtr = std::shared_ptr<EchoClient>;
 
-void RunClient(std::shared_ptr<EchoClient> client) {
-  auto addr = asio::ip::address::from_string("127.0.0.1");
-  unsigned short port = 8001;
-  asio::ip::tcp::endpoint endpoint(addr, port);
-  client->TryConnect(endpoint);
-  client->GetIoService().run();
+void RunClient(EchoClientPtr client) {
+    auto addr = hpt::Address::from_string("127.0.0.1");
+    uint16_t port = 8001;
+    hpt::EndPoint endpoint(addr, port);
+    client->TryConnect(endpoint);
+    client->Run();
 }
 
-
 int main(int argc, char* argv[]) {
-  asio::io_service service;
-  auto client = std::make_shared<EchoClient>(service);
-  std::thread t(RunClient, client);
-  t.join();
-  return 0;
+    auto client = std::make_shared<EchoClient>();
+    std::thread t(RunClient, client);
+    t.join();
+    return 0;
 }

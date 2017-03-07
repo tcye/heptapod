@@ -1,56 +1,74 @@
 
-#include <asio.hpp>
-#include <memory>
 #include <iostream>
-#include <functional>
 #include <thread>
 
-class TcpConnection : private asio::noncopyable, public std::enable_shared_from_this<TcpConnection> {
- public:
-  using SelfType = TcpConnection;
+#include "heptapod.h"
 
+class EchoServer;
 
+class TcpConnection : private hpt::noncopyable, public std::enable_shared_from_this<TcpConnection> {
+public:
+    using SelfType = TcpConnection;
+
+    TcpConnection(hpt::IOService& service) : _sock(service) {}
+
+    hpt::Socket& GetSocket() { return _sock; }
+
+    void OnAccept() {
+        std::cout << "Connection Established! " << std::endl;
+    }
+
+private:
+    hpt::Socket _sock;
 };
-
 
 class EchoServer : private asio::noncopyable, public std::enable_shared_from_this<EchoServer> {
- public:
-  using SelfType = EchoServer;
+public:
+    using SelfType = EchoServer;
 
-  EchoServer(asio::io_service& service) : service_(service), acceptor_(service) {
-    unsigned short port = 8001;
-    asio::ip::tcp::endpoint endpoint(asio::ip::tcp::v4(), port);
+    EchoServer() {
+        _service = std::make_shared<hpt::IOService>();
+        _acceptor = std::make_shared<hpt::Acceptor>(*_service);
+    }
 
-    acceptor_.open(endpoint.protocol());
-    acceptor_.bind(endpoint);
-    acceptor_.listen();
-  }
+    void StartAccept(hpt::EndPoint endpoint) {
+        _acceptor->open(endpoint.protocol());
+        _acceptor->bind(endpoint);
+        _acceptor->listen();
+        AcceptOne();
+    }
 
-  void WaitConnect(asio::ip::tcp::endpoint endpoint) {
-    acceptor_.async_accept()
-  }
+    void AcceptOne() {
+        auto conn = std::make_shared<TcpConnection>(*this->_service);
+        _acceptor->async_accept(conn->GetSocket(), MEM_FN(HandleAccept, conn, _1));
+    }
 
- private:
-  asio::io_service& service_;
-  asio::ip::tcp::acceptor acceptor_;
+    void HandleAccept(std::shared_ptr<TcpConnection> connection, const asio::error_code& ec) {
+        if (ec) {
+            std::cerr << "Accept Error, " << ec << std::endl;
+            return;
+        }
+        connection->OnAccept();
+        AcceptOne();
+    }
+
+    void Run() {
+        hpt::EndPoint endpoint(hpt::Address::from_string("127.0.0.1"), 8001);
+        StartAccept(endpoint);
+        _service->run();
+    }
+
+    hpt::IOService& GetIOService() { return *_service; }
+
+private:
+    hpt::IOServicePtr _service;
+    hpt::AcceptorPtr _acceptor;
 };
 
-
-void RunClient(std::shared_ptr<EchoClient> client) {
-  auto addr = asio::ip::address::from_string("127.0.0.1");
-  unsigned short port = 8001;
-  asio::ip::tcp::endpoint endpoint(addr, port);
-  client->TryConnect(endpoint);
-  client->GetIoService().run();
-
-}
 
 
 int main(int argc, char* argv[]) {
-  asio::io_service service;
-
-  auto server = std::make_shared<EchoServer>(service);
-
-  service.run();
-  return 0;
+    auto server = std::make_shared<EchoServer>();
+    server->Run();
+    return 0;
 }
