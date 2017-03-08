@@ -31,7 +31,7 @@ class EchoServer : private asio::noncopyable, public std::enable_shared_from_thi
     _acceptor = std::make_shared<hpt::Acceptor>(*_service);
   }
 
-  void StartAccept(hpt::EndPoint endpoint) {
+  void StartAccept(hpt::Endpoint endpoint) {
     _acceptor->open(endpoint.protocol());
     _acceptor->bind(endpoint);
     _acceptor->listen();
@@ -53,7 +53,7 @@ class EchoServer : private asio::noncopyable, public std::enable_shared_from_thi
   }
 
   void Run() {
-    hpt::EndPoint endpoint(hpt::Address::from_string("127.0.0.1"), 8001);
+    hpt::Endpoint endpoint(hpt::Address::from_string("127.0.0.1"), 8001);
     StartAccept(endpoint);
     _service->run();
   }

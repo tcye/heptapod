@@ -5,29 +5,19 @@
 #ifndef HEPTAPOD_TYPE_ALIAS_H
 #define HEPTAPOD_TYPE_ALIAS_H
 
-#include <memory>
-#include <functional>
 #include <asio.hpp>
-
-#define SMART_ALIAS(x, y) \
-using y = x; \
-using y##Ptr = std::shared_ptr<x>; \
-using y##WPtr = std::weak_ptr<x>;
-
-
-using namespace std::placeholders;
-#define MEM_FN(func, ...) std::bind(&SelfType::func, shared_from_this(), ##__VA_ARGS__)
+#include "common.h"
 
 namespace hpt {
 
 using noncopyable = asio::noncopyable;
 
-SMART_ALIAS(asio::io_service, IoService)
-SMART_ALIAS(asio::ip::tcp::endpoint, EndPoint)
-SMART_ALIAS(asio::ip::tcp::socket, Socket)
-SMART_ALIAS(asio::ip::tcp::acceptor, Acceptor)
-SMART_ALIAS(asio::ip::address, Address)
+HPT_ALIAS(asio::io_service, IoService)
+HPT_ALIAS(asio::ip::tcp::endpoint, Endpoint)
+HPT_ALIAS(asio::ip::tcp::socket, Socket)
+HPT_ALIAS(asio::ip::tcp::acceptor, Acceptor)
+HPT_ALIAS(asio::ip::address, Address)
 
-}
+} //namespace hpt
 
 #endif //HEPTAPOD_TYPE_ALIAS_H
