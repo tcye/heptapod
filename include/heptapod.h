@@ -8,4 +8,3 @@
 #include "type_alias.h"
 
 #endif //HEPTAPOD_HEPTAPOD_H
-

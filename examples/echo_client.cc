@@ -9,11 +9,11 @@ public:
     using SelfType = EchoClient;
 
     EchoClient() {
-        _service = std::make_shared<hpt::IOService>();
+        _service = std::make_shared<hpt::IoService>();
         _socket = std::make_shared<hpt::Socket>(*_service);
     }
 
-    hpt::IOService& GetIOService() { return *_service; }
+    hpt::IoService& GetIoService() { return *_service; }
 
     void TryConnect(hpt::EndPoint endpoint) {
         _socket->async_connect(endpoint, MEM_FN(OnConnect, _1));
@@ -31,7 +31,7 @@ public:
     }
 
 private:
-    hpt::IOServicePtr _service;
+    hpt::IoServicePtr _service;
     hpt::SocketPtr _socket;
 };
 

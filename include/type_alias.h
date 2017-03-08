@@ -22,11 +22,11 @@ namespace hpt {
 
 using noncopyable = asio::noncopyable;
 
-SMART_ALIAS(asio::io_service, IOService)
+SMART_ALIAS(asio::io_service, IoService)
 SMART_ALIAS(asio::ip::tcp::endpoint, EndPoint)
 SMART_ALIAS(asio::ip::tcp::socket, Socket)
-SMART_ALIAS(asio::ip::address, Address)
 SMART_ALIAS(asio::ip::tcp::acceptor, Acceptor)
+SMART_ALIAS(asio::ip::address, Address)
 
 }
 
