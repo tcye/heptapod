@@ -13,6 +13,7 @@ namespace hpt {
 using noncopyable = asio::noncopyable;
 
 HPT_ALIAS(asio::io_service, IoService)
+HPT_ALIAS(asio::io_service::work, IoServiceWork)
 HPT_ALIAS(asio::ip::tcp::endpoint, Endpoint)
 HPT_ALIAS(asio::ip::tcp::socket, Socket)
 HPT_ALIAS(asio::ip::tcp::acceptor, Acceptor)

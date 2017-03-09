@@ -6,15 +6,17 @@
 #define HEPTAPOD_SERVER_H
 
 #include "common.h"
+#include "type_alias.h"
 
 namespace hpt {
 
-class Server
-    : private noncopyable,
-      public std::enable_shared_from_this<Server> {
- public:
-  Server(const Endpoint& endpoint);
-  ~Server();
+class Server : private noncopyable
+{
+public:
+    Server(const Endpoint& endpoint);
+    ~Server();
+private:
+    IoServicePtr _io_service;
 };
 
 } //namespace hpt
