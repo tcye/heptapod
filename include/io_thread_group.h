@@ -6,6 +6,8 @@
 #define HEPTAPOD_IO_THREAD_GROUP_H
 
 #include <string>
+#include <thread>
+#include <vector>
 #include "type_alias.h"
 
 class std::thread;
@@ -14,6 +16,8 @@ namespace hpt {
 
 class IoThreadGroup : noncopyable
 {
+public:
+    using SelfType = IoThreadGroup;
 public:
     IoThreadGroup(int thread_num, const std::string& name = "");
     ~IoThreadGroup();
@@ -27,10 +31,15 @@ public:
     bool is_running() { return _is_running; }
 
 private:
+    void RunThread();
+
+private:
     IoService _io_service;
+    IoServiceWork* _io_service_work;
     std::string _name;
     int _thread_num;
     bool _is_running;
+    std::vector<std::thread> _threads;
 };
 
 } //namespace hpt

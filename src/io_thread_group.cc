@@ -24,18 +24,35 @@ IoThreadGroup::~IoThreadGroup()
 
 bool IoThreadGroup::Start()
 {
-    if (_is_running)
+    if (_is_running) return true;
+    _is_running = true;
+
+    _io_service_work = new IoServiceWork(_io_service);
+    for (int i = 0; i < _thread_num; ++i)
     {
-        return true;
+        _threads.emplace_back(&SelfType::RunThread, this);
     }
 }
 
 void IoThreadGroup::Stop()
 {
-    if (!_is_running)
+    if (!_is_running) return;
+    _is_running = false;
+
+    delete _io_service_work;
+    _io_service_work = nullptr;
+
+    for (auto&& thread : _threads)
     {
-        return;
+        thread.join();
     }
+
+    _threads.clear();
+}
+
+void IoThreadGroup::RunThread()
+{
+    _io_service.run();
 }
 
 } //namespace hpt
