@@ -2,7 +2,7 @@
 #include <iostream>
 #include <thread>
 
-#include "heptapod.h"
+#include "type_alias.h"
 
 class EchoClient : private hpt::noncopyable, public std::enable_shared_from_this<EchoClient> {
  public:

@@ -18,6 +18,8 @@ include_directories(include)
 link_libraries(ws2_32)
 link_libraries(wsock32)
 
+add_library(hpt src/io_service_pool.cc src/io_thread_group.cc src/server.cc)
+
 if (BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif (BUILD_EXAMPLES)

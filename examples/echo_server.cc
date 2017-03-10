@@ -2,7 +2,7 @@
 #include <iostream>
 #include <thread>
 
-#include "heptapod.h"
+#include "type_alias.h"
 
 class EchoServer;
 

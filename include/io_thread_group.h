@@ -10,7 +10,6 @@
 #include <vector>
 #include "type_alias.h"
 
-class std::thread;
 
 namespace hpt {
 

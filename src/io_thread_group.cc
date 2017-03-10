@@ -7,12 +7,15 @@
 namespace hpt {
 
 IoThreadGroup::IoThreadGroup(int thread_num, const std::string& name)
-        : _thread_num(thread_num), _name(name), _is_running(false)
+        : _thread_num(thread_num),
+          _name(name),
+          _is_running(false),
+          _io_service_work(nullptr)
 {
     if (_name.empty())
     {
         char tmp[20];
-        sprintf(tmp, '%p', this);
+        sprintf(tmp, "%p", this);
         _name = tmp;
     }
 }
