@@ -6,7 +6,7 @@
 
 namespace hpt {
 
-IoThreadGroup::IoThreadGroup(int thread_num, const std::string& name)
+IoThreadGroup::IoThreadGroup(std::size_t thread_num, const std::string& name)
         : _thread_num(thread_num),
           _name(name),
           _is_running(false),
@@ -33,7 +33,8 @@ bool IoThreadGroup::Start()
     _io_service_work = new IoServiceWork(_io_service);
     for (int i = 0; i < _thread_num; ++i)
     {
-        _threads.emplace_back(&SelfType::RunThread, this);
+        auto thread = new std::thread(&SelfType::RunThread, this);
+        _threads.push_back(thread);
     }
 }
 
@@ -47,9 +48,9 @@ void IoThreadGroup::Stop()
 
     for (auto&& thread : _threads)
     {
-        thread.join();
+        thread->join();
+        delete thread;
     }
-
     _threads.clear();
 }
 

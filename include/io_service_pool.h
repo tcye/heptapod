@@ -14,7 +14,7 @@ namespace hpt {
 class IoServicePool : private noncopyable
 {
 public:
-    IoServicePool(size_t pool_size, size_t pool_thread_num);
+    IoServicePool(std::size_t pool_size, std::size_t pool_thread_num);
     ~IoServicePool();
 
     bool Run();
@@ -23,8 +23,8 @@ public:
     IoService& GetIoService();
 
 private:
-    size_t _next_service;
-    std::vector<IoThreadGroup> _pool;
+    std::vector<IoThreadGroup*> _pool;
+    std::size_t _next_service;
 };
 
 }

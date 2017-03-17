@@ -7,42 +7,49 @@
 
 namespace hpt {
 
-IoServicePool::IoServicePool(size_t pool_size, size_t pool_thread_num)
+IoServicePool::IoServicePool(std::size_t pool_size, std::size_t pool_thread_num)
         : _next_service(0)
 {
-    for (size_t i = 0; i < pool_size; ++i)
+    for (std::size_t i = 0; i < pool_size; ++i)
     {
         char tmp[50];
         sprintf(tmp, "io_service worker thread group %d", i);
-        _pool.emplace_back(pool_thread_num, tmp);
+        auto io_thread_group = new IoThreadGroup(pool_thread_num, tmp);
+        _pool.push_back(io_thread_group);
     }
+}
+
+IoServicePool::~IoServicePool()
+{
+    Stop();
+
+    for (auto&& io_thread_group : _pool)
+    {
+        delete io_thread_group;
+    }
+    _pool.clear();
 }
 
 bool IoServicePool::Run()
 {
-    auto pool_size = _pool.size();
-    for (size_t i = 0; i < pool_size; ++i)
+    for (auto&& io_thread_group : _pool)
     {
-        if (!_pool[i].Start())
+        if (!io_thread_group->Start())
         {
-            std::cerr << "IoServicePool Run Failed!!!" << std::endl;
             return false;
         }
     }
+
     return true;
 }
 
 void IoServicePool::Stop()
 {
-    auto pool_size = _pool.size();
-    for (size_t i = 0; i < pool_size; ++i)
+    for (auto&& io_thread_group: _pool)
     {
-        _pool[i].Stop();
+        io_thread_group->Stop();
     }
-    _pool.clear();
-    _next_service = 0;
 }
-
 
 IoService& IoServicePool::GetIoService()
 {
@@ -50,11 +57,10 @@ IoService& IoServicePool::GetIoService()
     {
         _next_service = 0;
     }
-    IoService& service = _pool[_next_service].io_service();
+    IoService& service = _pool[_next_service]->io_service();
     ++_next_service;
     return service;
 }
-
 
 }
 

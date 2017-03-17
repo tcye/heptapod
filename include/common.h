@@ -5,6 +5,7 @@
 #ifndef HEPTAPOD_COMMON_H
 #define HEPTAPOD_COMMON_H
 
+#include <cstddef>
 #include <memory>
 #include <functional>
 
