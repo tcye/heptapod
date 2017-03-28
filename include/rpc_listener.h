@@ -13,10 +13,17 @@ namespace hpt {
 class RpcListener : private noncopyable
 {
 public:
-    RpcListener(IoServicePool& io_service_pool);
+    static int LISTEN_MAX_CONNECTIONS = 4096;
+
+    RpcListener(IoServicePool& io_service_pool, const Endpoint& endpoint);
     ~RpcListener();
 
+    void Close();
+    bool StartListen();
+
 private:
+    void AsyncAccept();
+
     IoServicePool& _io_service_pool;
     Acceptor _acceptor;
     Endpoint _endpoint;
