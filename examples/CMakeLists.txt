@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(HptExamples)
 
-add_executable(EchoServer echo_server.cc)
-add_executable(EchoClient echo_client.cc)
+#add_executable(EchoServer echo_server.cc)
+#add_executable(EchoClient echo_client.cc)
+add_executable(Test test.cc)
+target_link_libraries(Test asio fmt)

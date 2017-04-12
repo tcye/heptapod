@@ -5,7 +5,7 @@
 #ifndef HEPTAPOD_RPC_LISTENER_H
 #define HEPTAPOD_RPC_LISTENER_H
 
-#include "type_alias.h"
+#include "common.h"
 #include "io_service_pool.h"
 
 namespace hpt {

@@ -8,7 +8,7 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "type_alias.h"
+#include "common.h"
 
 
 namespace hpt {
@@ -30,6 +30,8 @@ public:
     bool is_running() { return _is_running; }
 
 private:
+    bool DoStart();
+    void DoStop();
     void RunThread();
 
 private:

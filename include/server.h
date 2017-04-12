@@ -6,7 +6,6 @@
 #define HEPTAPOD_SERVER_H
 
 #include "common.h"
-#include "type_alias.h"
 
 namespace hpt {
 

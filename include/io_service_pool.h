@@ -6,7 +6,7 @@
 #define HEPTAPOD_IO_SERVICE_POOL_H
 
 #include <vector>
-#include "type_alias.h"
+#include "common.h"
 #include "io_thread_group.h"
 
 namespace hpt {

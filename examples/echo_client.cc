@@ -2,7 +2,7 @@
 #include <iostream>
 #include <thread>
 
-#include "type_alias.h"
+#include "common.h"
 
 class EchoClient
         : private hpt::noncopyable,

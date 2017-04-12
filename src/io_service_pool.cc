@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "fmt/format.h"
 #include "io_service_pool.h"
 
 namespace hpt {
@@ -12,22 +13,18 @@ IoServicePool::IoServicePool(std::size_t pool_size, std::size_t pool_thread_num)
 {
     for (std::size_t i = 0; i < pool_size; ++i)
     {
-        char tmp[50];
-        sprintf(tmp, "io_service worker thread group %d", i);
-        auto io_thread_group = new IoThreadGroup(pool_thread_num, tmp);
+        auto name = fmt::format("io_service worker thread group {}", i);
+        auto io_thread_group = new IoThreadGroup(pool_thread_num, name);
         _pool.push_back(io_thread_group);
     }
 }
 
 IoServicePool::~IoServicePool()
 {
-    Stop();
-
     for (auto&& io_thread_group : _pool)
     {
         delete io_thread_group;
     }
-    _pool.clear();
 }
 
 bool IoServicePool::Run()
@@ -35,11 +32,8 @@ bool IoServicePool::Run()
     for (auto&& io_thread_group : _pool)
     {
         if (!io_thread_group->Start())
-        {
             return false;
-        }
     }
-
     return true;
 }
 
@@ -54,12 +48,9 @@ void IoServicePool::Stop()
 IoService& IoServicePool::GetIoService()
 {
     if (_next_service >= _pool.size())
-    {
         _next_service = 0;
-    }
-    IoService& service = _pool[_next_service]->io_service();
-    ++_next_service;
-    return service;
+
+    return _pool[_next_service++]->io_service();
 }
 
 }
