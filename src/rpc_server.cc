@@ -16,8 +16,8 @@ using namespace std::chrono_literals;
 
 namespace hpt {
 
-const int RpcServer::POOL_SIZE = 1;
-const int RpcServer::POOL_THREAD_NUM = 1;
+const int RpcServer::POOL_SIZE = 2;
+const int RpcServer::POOL_THREAD_NUM = 4;
 
 RpcServer::RpcServer() : _is_running(false)
 {

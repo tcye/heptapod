@@ -41,14 +41,13 @@ bool IoThreadGroup::Start()
 
 bool IoThreadGroup::DoStart()
 {
+    LOG->info("IoThreadGroup({}) DoStart.", _name);
     _io_service_work = new IoServiceWork(_io_service);
     for (int i = 0; i < _thread_num; ++i)
     {
         auto thread = new std::thread(&SelfType::RunThread, this);
         _threads.push_back(thread);
     }
-
-    LOG->info("IoThreadGroup({}) DoStart.", _name);
     return true;
 }
 
@@ -63,6 +62,7 @@ void IoThreadGroup::Stop()
 
 void IoThreadGroup::DoStop()
 {
+    LOG->info("IoThreadGroup({}) DoStop.", _name);
     delete _io_service_work;
     _io_service_work = nullptr;
 
@@ -72,7 +72,6 @@ void IoThreadGroup::DoStop()
         delete thread;
     }
     _threads.clear();
-    LOG->info("IoThreadGroup({}) DoStop.", _name);
 }
 
 void IoThreadGroup::RunThread()
