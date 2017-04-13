@@ -17,6 +17,7 @@ void InitHptLogging()
 void ShutdownHptLogging()
 {
     spdlog::drop_all();
+    _logger = nullptr;
 }
 
 spdlog::logger* GetLogger()

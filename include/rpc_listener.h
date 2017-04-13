@@ -10,10 +10,11 @@
 
 namespace hpt {
 
-class RpcListener : private noncopyable
+class RpcListener : private noncopyable, public std::enable_shared_from_this<RpcListener>
 {
 public:
-    static int LISTEN_MAX_CONNECTIONS = 4096;
+    using SelfType = RpcListener;
+    static const int LISTEN_MAX_CONNECTIONS = 4096;
 
     RpcListener(IoServicePool& io_service_pool, const Endpoint& endpoint);
     ~RpcListener();
@@ -21,12 +22,17 @@ public:
     void Close();
     bool StartListen();
 
+    bool is_closed() { return _is_closed; }
+
 private:
     void AsyncAccept();
+    void OnAccept(RpcServerStreamPtr stream, const asio::error_code& error);
 
     IoServicePool& _io_service_pool;
     Acceptor _acceptor;
     Endpoint _endpoint;
+
+    bool _is_closed;
 };
 
 } //namespace hpt

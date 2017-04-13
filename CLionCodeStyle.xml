@@ -1,6 +1,6 @@
 <code_scheme name="HptCodeStyle">
   <option name="LINE_SEPARATOR" value="&#xA;" />
-  <option name="RIGHT_MARGIN" value="80" />
+  <option name="RIGHT_MARGIN" value="100" />
   <MarkdownNavigatorCodeStyleSettings>
     <option name="RIGHT_MARGIN" value="72" />
   </MarkdownNavigatorCodeStyleSettings>
@@ -59,6 +59,7 @@
     <option name="BLANK_LINES_AROUND_METHOD_IN_INTERFACE" value="0" />
     <option name="BRACE_STYLE" value="5" />
     <option name="CLASS_BRACE_STYLE" value="5" />
+    <option name="ELSE_ON_NEW_LINE" value="true" />
     <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="false" />
     <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
     <option name="FOR_STATEMENT_WRAP" value="1" />

@@ -9,11 +9,11 @@
 
 namespace hpt {
 
-class Server : private noncopyable
+class RpcServer : private noncopyable
 {
 public:
-    Server(const Endpoint& endpoint);
-    ~Server();
+    RpcServer(const Endpoint& endpoint);
+    ~RpcServer();
 private:
     IoServicePtr _io_service;
 };
