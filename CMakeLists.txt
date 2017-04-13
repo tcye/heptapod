@@ -21,7 +21,15 @@ link_libraries(wsock32)
 
 add_library(asio dependencies/src/asio/asio.cpp)
 add_library(fmt dependencies/src/fmt/format.cc dependencies/src/fmt/ostream.cc dependencies/src/fmt/posix.cc)
-add_library(hpt src/io_service_pool.cc src/io_thread_group.cc src/rpc_server.cc)
+add_library(hpt
+        src/io_service_pool.cc
+        src/io_thread_group.cc
+        src/rpc_server.cc
+        src/logging.cc
+        src/rpc_listener.cc
+        src/rpc_server_stream.cc
+        )
+
 
 if (BUILD_EXAMPLES)
     add_subdirectory(examples)

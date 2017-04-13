@@ -35,6 +35,8 @@ HPT_ALIAS(asio::ip::tcp::acceptor, Acceptor)
 HPT_ALIAS(asio::ip::address, Address)
 
 HPT_PTR_ALIAS(RpcServerStream)
+HPT_PTR_ALIAS(RpcListener)
+HPT_PTR_ALIAS(IoServicePool)
 
 } // namespace hpt
 

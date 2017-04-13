@@ -29,6 +29,7 @@ void RpcListener::Close()
 
     _acceptor.cancel();
     _acceptor.close();
+    _is_closed = true;
 }
 
 bool RpcListener::StartListen()
@@ -83,6 +84,8 @@ void RpcListener::OnAccept(RpcServerStreamPtr stream, const asio::error_code& er
         LOG->info("OnAccept listener already closed.");
         return;
     }
+
+    LOG->info("OnAccept");
 
     AsyncAccept();
 }

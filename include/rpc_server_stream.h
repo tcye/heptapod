@@ -19,7 +19,6 @@ public:
 
 private:
     Socket _socket;
-
 };
 
 }

@@ -30,7 +30,7 @@ IoThreadGroup::~IoThreadGroup()
 bool IoThreadGroup::Start()
 {
     if (_is_running)
-        Stop();
+        return true;
 
     if (!DoStart())
         return false;
@@ -77,8 +77,8 @@ void IoThreadGroup::DoStop()
 
 void IoThreadGroup::RunThread()
 {
-    _io_service.run();
     LOG->info("IoThreadGroup({}) io_service run.", _name);
+    _io_service.run();
 }
 
 } //namespace hpt

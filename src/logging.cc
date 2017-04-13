@@ -3,21 +3,20 @@
 //
 
 #include "logging.h"
-#include "spdlog/spdlog.h"
 
 namespace hpt {
 
-static spdlog::logger _logger = nullptr;
+static spdlog::logger* _logger = nullptr;
 
 void InitHptLogging()
 {
-    _logger = spdlog::stdout_color_mt("console");
+    _logger = spdlog::stdout_color_mt("console").get();
 }
 
 void ShutdownHptLogging()
 {
-    spdlog::drop_all();
     _logger = nullptr;
+    spdlog::drop_all();
 }
 
 spdlog::logger* GetLogger()

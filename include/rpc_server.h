@@ -5,17 +5,29 @@
 #ifndef HEPTAPOD_SERVER_H
 #define HEPTAPOD_SERVER_H
 
+#include <mutex>
 #include "common.h"
 
 namespace hpt {
 
 class RpcServer : private noncopyable
 {
+    static const int POOL_SIZE;
+    static const int POOL_THREAD_NUM;
 public:
-    RpcServer(const Endpoint& endpoint);
+    RpcServer();
     ~RpcServer();
+
+    bool Start(const Endpoint& endpoint);
+    void Run();
+    void Stop();
+
 private:
-    IoServicePtr _io_service;
+    IoServicePoolPtr _io_service_pool;
+    RpcListenerPtr _listener;
+    bool _is_running;
+    std::mutex _start_stop_lock;
+
 };
 
 } //namespace hpt
