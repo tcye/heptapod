@@ -2,8 +2,8 @@
 // Created by tiancai on 2017/3/14.
 //
 #include "rpc_listener.h"
+#include "io_service_pool.h"
 #include "rpc_server_stream.h"
-#include "logging.h"
 
 namespace hpt {
 
@@ -38,25 +38,25 @@ bool RpcListener::StartListen()
     _acceptor.open(_endpoint.protocol(), ec);
     if (ec)
     {
-        LOG->error("StartListen, open failed! reason: {}", ec.message());
+        logger()->error("StartListen, open failed! reason: {}", ec.message());
         return false;
     }
     _acceptor.set_option(Acceptor::reuse_address(true), ec);
     if (ec)
     {
-        LOG->error("StartListen, set reuse address failed! reason: {}", ec.message());
+        logger()->error("StartListen, set reuse address failed! reason: {}", ec.message());
         return false;
     }
     _acceptor.bind(_endpoint, ec);
     if (ec)
     {
-        LOG->error("StartListen, bind failed! reason: {}", ec.message());
+        logger()->error("StartListen, bind failed! reason: {}", ec.message());
         return false;
     }
     _acceptor.listen(LISTEN_MAX_CONNECTIONS, ec);
     if (ec)
     {
-        LOG->error("StartListen, listen failed! reason: {}", ec.message());
+        logger()->error("StartListen, listen failed! reason: {}", ec.message());
         return false;
     }
 
@@ -75,17 +75,17 @@ void RpcListener::OnAccept(RpcServerStreamPtr stream, const asio::error_code& er
 {
     if (error)
     {
-        LOG->error("OnAccept failed! reason: {}", error.message());
+        logger()->error("OnAccept failed! reason: {}", error.message());
         return;
     }
 
     if (_is_closed)
     {
-        LOG->info("OnAccept listener already closed.");
+        logger()->info("OnAccept listener already closed.");
         return;
     }
 
-    LOG->info("OnAccept");
+    logger()->info("OnAccept");
 
     AsyncAccept();
 }

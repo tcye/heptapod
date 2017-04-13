@@ -3,11 +3,15 @@
 //
 
 #include "fmt/format.h"
+#include <iostream>
+#include "rpc_server.h"
+#include "cxxabi.h"
 
 int main(int argc, char** argv)
 {
-    int* p = new int;
-    fmt::print("{}hello world{}", 1, (void*)p);
-    delete p;
+    int i;
+    std::cout << abi::__cxa_demangle(typeid(hpt::RpcServer).name(), NULL, NULL, &i) << std::endl;
+    std::cout << typeid(hpt::RpcServer).name() << std::endl;
+
     return 0;
 }

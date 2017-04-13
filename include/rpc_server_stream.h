@@ -9,8 +9,9 @@
 
 namespace hpt {
 
-class RpcServerStream: noncopyable
+class RpcServerStream
 {
+    HPT_CLASS(RpcServerStream)
 public:
     RpcServerStream(IoService& io_service);
     ~RpcServerStream();

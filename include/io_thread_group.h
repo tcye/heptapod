@@ -10,13 +10,11 @@
 #include <vector>
 #include "common.h"
 
-
 namespace hpt {
 
-class IoThreadGroup : noncopyable
+class IoThreadGroup
 {
-public:
-    using SelfType = IoThreadGroup;
+    HPT_CLASS(IoThreadGroup)
 public:
     IoThreadGroup(std::size_t thread_num, const std::string& name = "");
     ~IoThreadGroup();
@@ -34,7 +32,6 @@ private:
     void DoStop();
     void RunThread();
 
-private:
     IoService _io_service;
     IoServiceWork* _io_service_work;
     std::vector<std::thread*> _threads;

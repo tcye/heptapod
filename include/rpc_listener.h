@@ -6,14 +6,15 @@
 #define HEPTAPOD_RPC_LISTENER_H
 
 #include "common.h"
-#include "io_service_pool.h"
 
 namespace hpt {
 
-class RpcListener : private noncopyable, public std::enable_shared_from_this<RpcListener>
+class IoServicePool;
+
+class RpcListener : public std::enable_shared_from_this<RpcListener>
 {
+    HPT_CLASS(RpcListener)
 public:
-    using SelfType = RpcListener;
     static const int LISTEN_MAX_CONNECTIONS = 4096;
 
     RpcListener(IoServicePool& io_service_pool, const Endpoint& endpoint);

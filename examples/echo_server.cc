@@ -1,8 +1,4 @@
 
-#include <iostream>
-#include <thread>
-#include "logging.h"
-
 #include "rpc_server.h"
 
 
@@ -16,5 +12,6 @@ int main(int argc, char* argv[])
     server->Start(endpoint);
     server->Run();
     server->Stop();
+
     return 0;
 }

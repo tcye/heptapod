@@ -4,13 +4,11 @@
 
 #include <signal.h>
 #include <thread>
-#include <chrono>
 #include <iostream>
 
 #include "rpc_server.h"
 #include "io_service_pool.h"
 #include "rpc_listener.h"
-#include "logging.h"
 
 using namespace std::chrono_literals;
 
@@ -21,13 +19,12 @@ const int RpcServer::POOL_THREAD_NUM = 4;
 
 RpcServer::RpcServer() : _is_running(false)
 {
-    InitHptLogging();
+
 }
 
 RpcServer::~RpcServer()
 {
     Stop();
-    ShutdownHptLogging();
 }
 
 bool RpcServer::Start(const Endpoint& endpoint)
@@ -42,13 +39,13 @@ bool RpcServer::Start(const Endpoint& endpoint)
 
     if (!_io_service_pool->Run())
     {
-        LOG->error("Server start failed! io_service_pool run error.");
+        logger()->error("Server start failed! io_service_pool run error.");
         return false;
     }
 
     if (!_listener->StartListen())
     {
-        LOG->error("Server start failed! listener start listener error.");
+        logger()->error("Server start failed! listener start listener error.");
         return false;
     }
 

@@ -3,9 +3,7 @@
 //
 
 #include "fmt/format.h"
-#include "spdlog/spdlog.h"
 #include "io_thread_group.h"
-#include "logging.h"
 
 namespace hpt {
 
@@ -17,14 +15,11 @@ IoThreadGroup::IoThreadGroup(std::size_t thread_num, const std::string& name)
 {
     if (_name.empty())
         _name = fmt::format("{:p}", static_cast<void*>(this));
-
-    LOG->info("IoThreadGroup({}) constructed.", _name);
 }
 
 IoThreadGroup::~IoThreadGroup()
 {
     Stop();
-    LOG->info("IoThreadGroup({}) destroyed.", _name);
 }
 
 bool IoThreadGroup::Start()
@@ -41,7 +36,6 @@ bool IoThreadGroup::Start()
 
 bool IoThreadGroup::DoStart()
 {
-    LOG->info("IoThreadGroup({}) DoStart.", _name);
     _io_service_work = new IoServiceWork(_io_service);
     for (int i = 0; i < _thread_num; ++i)
     {
@@ -62,7 +56,6 @@ void IoThreadGroup::Stop()
 
 void IoThreadGroup::DoStop()
 {
-    LOG->info("IoThreadGroup({}) DoStop.", _name);
     delete _io_service_work;
     _io_service_work = nullptr;
 
@@ -76,7 +69,6 @@ void IoThreadGroup::DoStop()
 
 void IoThreadGroup::RunThread()
 {
-    LOG->info("IoThreadGroup({}) io_service run.", _name);
     _io_service.run();
 }
 

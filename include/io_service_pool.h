@@ -7,12 +7,14 @@
 
 #include <vector>
 #include "common.h"
-#include "io_thread_group.h"
 
 namespace hpt {
 
-class IoServicePool : private noncopyable
+class IoThreadGroup;
+
+class IoServicePool
 {
+    HPT_CLASS(IoServicePool)
 public:
     IoServicePool(std::size_t pool_size, std::size_t pool_thread_num);
     ~IoServicePool();
