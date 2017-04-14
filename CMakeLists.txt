@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 # Common definitions
 add_definitions(-DASIO_STANDALONE)
 add_definitions(-DASIO_SEPARATE_COMPILATION)
+add_definitions(-DSPDLOG_FMT_EXTERNAL)
 add_definitions(-D__USE_W32_SOCKETS)
 add_definitions(-D_WIN32_WINNT=0x0a00)
 
@@ -28,7 +29,6 @@ add_library(hpt
         src/rpc_listener.cc
         src/rpc_server_stream.cc
         )
-
 
 if (BUILD_EXAMPLES)
     add_subdirectory(examples)

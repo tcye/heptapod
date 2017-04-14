@@ -76,6 +76,7 @@ void RpcListener::OnAccept(RpcServerStreamPtr stream, const asio::error_code& er
     if (error)
     {
         logger()->error("OnAccept failed! reason: {}", error.message());
+        Close();
         return;
     }
 
@@ -86,7 +87,7 @@ void RpcListener::OnAccept(RpcServerStreamPtr stream, const asio::error_code& er
     }
 
     logger()->info("OnAccept");
-
+    stream->SetSocketConnected();
     AsyncAccept();
 }
 

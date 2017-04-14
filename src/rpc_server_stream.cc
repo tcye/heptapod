@@ -16,10 +16,20 @@ RpcServerStream::~RpcServerStream()
 
 }
 
-Socket& RpcServerStream::socket()
+void RpcServerStream::SetSocketConnected()
 {
-    return _socket;
+    TriggerReceive();
+    TriggerSend();
 }
 
+void RpcServerStream::TriggerReceive()
+{
+    _socket.read_some();
+}
+
+void RpcServerStream::TriggerSend()
+{
+
+}
 
 }

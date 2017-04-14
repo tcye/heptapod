@@ -2,11 +2,10 @@
 // Created by tiancai on 2017/3/8.
 //
 
+#pragma once
 #ifndef HEPTAPOD_COMMON_H
 #define HEPTAPOD_COMMON_H
 
-#include <memory>
-#include <functional>
 #include "asio.hpp"
 #include "spdlog/spdlog.h"
 
@@ -42,7 +41,6 @@ using x##WPtr = std::weak_ptr<x>;
 
 namespace hpt {
 
-using noncopyable = asio::noncopyable;
 HPT_ALIAS(asio::io_service, IoService)
 HPT_ALIAS(asio::io_service::work, IoServiceWork)
 HPT_ALIAS(asio::ip::tcp::endpoint, Endpoint)

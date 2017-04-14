@@ -2,7 +2,6 @@
 // Created by tiancai on 2017/3/8.
 //
 
-#include <signal.h>
 #include <thread>
 #include <iostream>
 

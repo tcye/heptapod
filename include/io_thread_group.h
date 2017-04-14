@@ -2,6 +2,7 @@
 // Created by tiancai on 2017/3/9.
 //
 
+#pragma once
 #ifndef HEPTAPOD_IO_THREAD_GROUP_H
 #define HEPTAPOD_IO_THREAD_GROUP_H
 

@@ -2,6 +2,7 @@
 // Created by tiancai on 2017/3/8.
 //
 
+#pragma once
 #ifndef HEPTAPOD_SERVER_H
 #define HEPTAPOD_SERVER_H
 

@@ -2,6 +2,7 @@
 // Created by tiancai on 2017/3/10.
 //
 
+#pragma once
 #ifndef HEPTAPOD_IO_SERVICE_POOL_H
 #define HEPTAPOD_IO_SERVICE_POOL_H
 

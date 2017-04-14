@@ -2,6 +2,7 @@
 // Created by tiancai on 2017/3/14.
 //
 
+#pragma once
 #ifndef HEPTAPOD_RPC_LISTENER_H
 #define HEPTAPOD_RPC_LISTENER_H
 
