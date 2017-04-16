@@ -45,7 +45,12 @@ void RpcServerStream::TryReadSome()
 
 void RpcServerStream::OnReadSome(const asio::error_code& error, std::size_t transferred_size)
 {
+    if (error)
+    {
+        return;
+    }
 
+    TryReadSome();
 }
 
 }
