@@ -7,6 +7,8 @@
 
 namespace hpt {
 
+const int RpcListener::LISTEN_MAX_CONNECTIONS = 4096;
+
 RpcListener::RpcListener(IoServicePool& io_service_pool,
                          const Endpoint& endpoint)
         : _io_service_pool(io_service_pool),

@@ -14,9 +14,10 @@ namespace hpt {
 class RpcServer
 {
     HPT_CLASS(RpcServer)
-public:
+
     static const int POOL_SIZE;
     static const int POOL_THREAD_NUM;
+public:
 
     RpcServer();
     ~RpcServer();

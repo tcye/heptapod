@@ -7,12 +7,15 @@
 #define HEPTAPOD_RPC_SERVER_STREAM_H
 
 #include "common.h"
+#include "msgpack.hpp"
 
 namespace hpt {
 
-class RpcServerStream : std::enable_shared_from_this<RpcServerStream>
+class RpcServerStream : public std::enable_shared_from_this<RpcServerStream>
 {
     HPT_CLASS(RpcServerStream)
+    static const int READ_SIZE;
+
 public:
     RpcServerStream(IoService& io_service);
     ~RpcServerStream();
@@ -25,7 +28,12 @@ private:
     void TriggerReceive();
     void TriggerSend();
 
+    void TryReadSome();
+
+    void OnReadSome(const asio::error_code& error, std::size_t transferred_size);
+
     Socket _socket;
+    msgpack::unpacker _unpacker;
 };
 
 }

@@ -15,8 +15,9 @@ class IoServicePool;
 class RpcListener : public std::enable_shared_from_this<RpcListener>
 {
     HPT_CLASS(RpcListener)
+
+    static const int LISTEN_MAX_CONNECTIONS;
 public:
-    static const int LISTEN_MAX_CONNECTIONS = 4096;
 
     RpcListener(IoServicePool& io_service_pool, const Endpoint& endpoint);
     ~RpcListener();
