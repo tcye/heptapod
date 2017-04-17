@@ -6,6 +6,7 @@
 #ifndef HEPTAPOD_RPC_SERVER_STREAM_H
 #define HEPTAPOD_RPC_SERVER_STREAM_H
 
+#include <atomic>
 #include "common.h"
 #include "msgpack.hpp"
 
@@ -21,6 +22,7 @@ public:
     ~RpcServerStream();
 
     void SetSocketConnected();
+    void Close();
 
     Socket& socket() { return _socket; }
 
@@ -34,8 +36,9 @@ private:
 
     Socket _socket;
     msgpack::unpacker _unpacker;
+    std::atomic_bool _is_closed;
 };
 
 }
 
-#endif //HEPTAPOD_RPC_SERVER_STREAM_H
+#endif // HEPTAPOD_RPC_SERVER_STREAM_H
