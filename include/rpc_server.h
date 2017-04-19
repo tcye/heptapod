@@ -6,6 +6,7 @@
 #ifndef HEPTAPOD_SERVER_H
 #define HEPTAPOD_SERVER_H
 
+#include <string>
 #include <mutex>
 #include "common.h"
 
@@ -14,20 +15,17 @@ namespace hpt {
 class RpcServer
 {
     HPT_CLASS(RpcServer)
-
-    static const int POOL_SIZE;
-    static const int POOL_THREAD_NUM;
 public:
 
-    RpcServer();
+    RpcServer(IoServicePool& io_service_pool);
     ~RpcServer();
 
-    bool Start(const Endpoint& endpoint);
-    void Run();
+    bool Start(const std::string& address, uint16_t port);
     void Stop();
+    void WaitSignal();
 
 private:
-    IoServicePoolPtr _io_service_pool;
+    IoServicePool& _io_service_pool;
     RpcListenerPtr _listener;
     bool _is_running;
     std::mutex _start_stop_lock;

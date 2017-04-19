@@ -55,4 +55,15 @@ HPT_PTR_ALIAS(IoServicePool)
 } // namespace hpt
 
 
+namespace hpt {
+
+inline Endpoint MakeEndpoint(const std::string& address_str, uint16_t port)
+{
+    Address address = Address::from_string(address_str);
+    return Endpoint(address, port);
+}
+
+} // namespace hpt
+
+
 #endif //HEPTAPOD_COMMON_H

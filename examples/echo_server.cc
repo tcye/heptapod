@@ -1,17 +1,20 @@
 
+#include "io_service_pool.h"
 #include "rpc_server.h"
 
 
 int main(int argc, char* argv[])
 {
-    auto address = hpt::Address::from_string("127.0.0.1");
-    uint16_t port = 8001;
-    hpt::Endpoint endpoint(address, port);
+    hpt::IoServicePool io_service_pool(4, 2);
+    hpt::RpcServer server(io_service_pool);
 
-    auto server = std::make_shared<hpt::RpcServer>();
-    server->Start(endpoint);
-    server->Run();
-    server->Stop();
+    io_service_pool.Run();
+
+    server.Start("127.0.0.1", 8001);
+    server.WaitSignal();
+    server.Stop();
+
+    io_service_pool.Stop();
 
     return 0;
 }

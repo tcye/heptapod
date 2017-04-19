@@ -6,17 +6,15 @@
 #include <iostream>
 
 #include "rpc_server.h"
-#include "io_service_pool.h"
 #include "rpc_listener.h"
+#include "io_service_pool.h"
 
 using namespace std::chrono_literals;
 
 namespace hpt {
 
-const int RpcServer::POOL_SIZE = 2;
-const int RpcServer::POOL_THREAD_NUM = 4;
-
-RpcServer::RpcServer() : _is_running(false)
+RpcServer::RpcServer(IoServicePool& io_service_pool)
+    : _is_running(false), _io_service_pool(io_service_pool)
 {
 
 }
@@ -26,21 +24,14 @@ RpcServer::~RpcServer()
     Stop();
 }
 
-bool RpcServer::Start(const Endpoint& endpoint)
+bool RpcServer::Start(const std::string& address, uint16_t port)
 {
     std::lock_guard<std::mutex> guard(_start_stop_lock);
 
     if (_is_running)
         return true;
 
-    _io_service_pool = std::make_shared<IoServicePool>(POOL_SIZE, POOL_THREAD_NUM);
-    _listener = std::make_shared<RpcListener>(*_io_service_pool, endpoint);
-
-    if (!_io_service_pool->Run())
-    {
-        logger()->error("Server start failed! io_service_pool run error.");
-        return false;
-    }
+    _listener = std::make_shared<RpcListener>(_io_service_pool, hpt::MakeEndpoint(address, port));
 
     if (!_listener->StartListen())
     {
@@ -60,11 +51,7 @@ void RpcServer::Stop()
         return;
 
     _listener->Close();
-    _io_service_pool->Stop();
-
     _listener.reset();
-    _io_service_pool.reset();
-
     _is_running = false;
 }
 
@@ -74,7 +61,7 @@ static void SignalHandler(int /*sig*/)
     s_quit = true;
 }
 
-void RpcServer::Run()
+void RpcServer::WaitSignal()
 {
     signal(SIGINT, SignalHandler);
     signal(SIGTERM, SignalHandler);
