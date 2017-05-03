@@ -26,7 +26,7 @@
     using SelfType = TypeName;
 
 using namespace std::placeholders;
-#define MEM_FN(func, ...) std::bind(&SelfType::func, shared_from_this(), ##__VA_ARGS__)
+#define MEM_FN(func, ...) std::bind(&SelfType::func, std::dynamic_pointer_cast<SelfType>(shared_from_this()), ##__VA_ARGS__)
 #define MEM_FN_UNSAFE(func, ...) std::bind(&SelfType::func, this, ##__VA_ARGS__)
 
 #define HPT_ALIAS(x, y) \
