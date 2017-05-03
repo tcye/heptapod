@@ -2,7 +2,6 @@
 #include "common.h"
 #include "msgpack.hpp"
 #include <iostream>
-#include <thread>
 
 
 void RunIoService(asio::io_service& io_service)

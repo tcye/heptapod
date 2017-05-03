@@ -28,6 +28,7 @@ add_library(hpt
         src/rpc_server.cc
         src/rpc_listener.cc
         src/rpc_server_stream.cc
+        src/wait_signal_func.cc
         )
 
 if (BUILD_EXAMPLES)

@@ -55,21 +55,4 @@ void RpcServer::Stop()
     _is_running = false;
 }
 
-static volatile bool s_quit = false;
-static void SignalHandler(int /*sig*/)
-{
-    s_quit = true;
-}
-
-void RpcServer::WaitSignal()
-{
-    signal(SIGINT, SignalHandler);
-    signal(SIGTERM, SignalHandler);
-
-    while (!s_quit)
-    {
-        std::this_thread::sleep_for(1s);
-    }
-}
-
 } //namespace hpt

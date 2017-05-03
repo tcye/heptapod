@@ -2,16 +2,29 @@
 // Created by tiancai on 2017/4/12.
 //
 
-#include "fmt/format.h"
 #include <iostream>
-#include "rpc_server.h"
-#include "cxxabi.h"
+
+class Base
+{
+    void f()
+    {
+        std::cout << "Base::f" << std::endl;
+    }
+};
+
+class Dev : public Base
+{
+    int a;
+};
 
 int main(int argc, char** argv)
 {
-    int i;
-    std::cout << abi::__cxa_demangle(typeid(hpt::RpcServer).name(), NULL, NULL, &i) << std::endl;
-    std::cout << typeid(hpt::RpcServer).name() << std::endl;
+    Base b;
+    Dev d;
+
+    std::cout << sizeof(Base) << sizeof(Dev);
+
+
 
     return 0;
 }

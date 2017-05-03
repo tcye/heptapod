@@ -9,10 +9,11 @@
 #include <string>
 #include <mutex>
 #include "common.h"
+#include "wait_signal_func.h"
 
 namespace hpt {
 
-class RpcServer
+class RpcServer : public WaitSignalFunc
 {
     HPT_CLASS(RpcServer)
 public:
@@ -22,7 +23,6 @@ public:
 
     bool Start(const std::string& address, uint16_t port);
     void Stop();
-    void WaitSignal();
 
 private:
     IoServicePool& _io_service_pool;
