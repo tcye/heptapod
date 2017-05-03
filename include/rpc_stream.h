@@ -14,6 +14,15 @@ class RpcStream : public std::enable_shared_from_this<RpcStream>
     HPT_CLASS(RpcStream)
 public:
     RpcStream(IoService& io_service);
+
+private:
+    void TriggerReceive();
+    void TriggerSend();
+    void TryReadSome();
+    void OnReadSome(const asio::error_code& error, std::size_t transferred_size);
+
+    Socket _socket;
+    msgpack::unpacker _unpacker;
 };
 
 } // namespace hpt
