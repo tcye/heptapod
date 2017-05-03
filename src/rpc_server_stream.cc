@@ -30,6 +30,7 @@ void RpcServerStream::Close()
 {
     if (!_is_closed.exchange(true))
     {
+        logger()->info("now shutdown stream");
         _socket.shutdown(asio::ip::tcp::socket::shutdown_both);
         _socket.close();
     }

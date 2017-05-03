@@ -26,6 +26,7 @@ add_library(hpt
         src/io_service_pool.cc
         src/io_thread_group.cc
         src/rpc_server.cc
+        src/rpc_client.cc
         src/rpc_listener.cc
         src/rpc_server_stream.cc
         src/wait_signal_func.cc
