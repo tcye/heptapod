@@ -5,17 +5,16 @@
 #ifndef HEPTAPOD_RPC_CLIENT_STREAM_H
 #define HEPTAPOD_RPC_CLIENT_STREAM_H
 
-#include "common.h"
+#include "rpc_stream.h"
 
 namespace hpt {
 
-class RpcClientStream : std::enable_shared_from_this<RpcClientStream>
+class RpcClientStream : public RpcStream
 {
     HPT_CLASS(RpcClientStream)
 public:
-    RpcClientStream();
+    using RpcStream::RpcStream;
     ~RpcClientStream();
-
 };
 
 } // namespace hpt

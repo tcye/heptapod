@@ -58,6 +58,7 @@ void IoThreadGroup::DoStop()
 {
     delete _io_service_work;
     _io_service_work = nullptr;
+    _io_service.stop();
 
     for (auto&& thread : _threads)
     {

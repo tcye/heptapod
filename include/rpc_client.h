@@ -11,6 +11,7 @@
 namespace hpt {
 
 class IoServicePool;
+class RpcClientStream;
 
 class RpcClient : public EnableWaitSignal
 {
@@ -28,7 +29,7 @@ private:
 private:
     IoServicePool& _io_service_pool;
     std::atomic_bool _is_closed;
-    asio::ip::tcp::socket _socket;
+    std::shared_ptr<RpcClientStream> _rpc_stream;
 };
 
 } // namespace hpt

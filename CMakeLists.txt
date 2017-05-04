@@ -30,6 +30,7 @@ add_library(hpt
         src/rpc_listener.cc
         src/rpc_stream.cc
         src/rpc_server_stream.cc
+        src/rpc_client_stream.cc
         src/enable_wait_signal.cc
         )
 
