@@ -26,15 +26,11 @@ RpcListener::~RpcListener()
 
 void RpcListener::Close()
 {
-    if (_status.exchange(STATUS_CLOSED) != STATUS_CLOSED)
+    if (_status.exchange(STATUS_CLOSED) == STATUS_LISTENING)
     {
         _acceptor.cancel();
         _acceptor.close();
         logger()->info("Close: closed");
-    }
-    else
-    {
-        logger()->info("Close: duplicated close operation");
     }
 }
 

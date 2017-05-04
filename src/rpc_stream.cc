@@ -21,7 +21,7 @@ RpcStream::~RpcStream()
 
 void RpcStream::Close()
 {
-    if (_status.exchange(STATUS_CLOSED) != STATUS_CLOSED)
+    if (_status.exchange(STATUS_CLOSED) != STATUS_CONNECTED)
     {
         _socket.shutdown(asio::ip::tcp::socket::shutdown_both);
         _socket.close();
