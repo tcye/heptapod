@@ -2,7 +2,6 @@
 // Created by tiancai on 2017/3/8.
 //
 
-#pragma once
 #ifndef HEPTAPOD_COMMON_H
 #define HEPTAPOD_COMMON_H
 
@@ -41,26 +40,10 @@ using x##WPtr = std::weak_ptr<x>;
 
 namespace hpt {
 
-HPT_ALIAS(asio::io_service, IoService)
-HPT_ALIAS(asio::io_service::work, IoServiceWork)
-HPT_ALIAS(asio::ip::tcp::endpoint, Endpoint)
-HPT_ALIAS(asio::ip::tcp::socket, Socket)
-HPT_ALIAS(asio::ip::tcp::acceptor, Acceptor)
-HPT_ALIAS(asio::ip::address, Address)
-
-HPT_PTR_ALIAS(RpcServerStream)
-HPT_PTR_ALIAS(RpcListener)
-HPT_PTR_ALIAS(IoServicePool)
-
-} // namespace hpt
-
-
-namespace hpt {
-
-inline Endpoint MakeEndpoint(const std::string& address_str, uint16_t port)
+inline asio::ip::tcp::endpoint MakeEndpoint(const std::string& address_str, uint16_t port)
 {
-    Address address = Address::from_string(address_str);
-    return Endpoint(address, port);
+    auto address = asio::ip::address::from_string(address_str);
+    return asio::ip::tcp::endpoint(address, port);
 }
 
 } // namespace hpt

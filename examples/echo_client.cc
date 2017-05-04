@@ -19,9 +19,9 @@
 //
 //    asio::ip::tcp::socket sock(io_service);
 //
-//    auto addr = hpt::Address::from_string("127.0.0.1");
+//    auto addr = hpt::asio::ip::address::from_string("127.0.0.1");
 //    uint16_t port = 8001;
-//    hpt::Endpoint endpoint(addr, port);
+//    hpt::asio::ip::tcp::endpoint endpoint(addr, port);
 //
 //    sock.connect(endpoint);
 //

@@ -2,7 +2,6 @@
 // Created by tiancai on 2017/3/14.
 //
 
-#pragma once
 #ifndef HEPTAPOD_RPC_LISTENER_H
 #define HEPTAPOD_RPC_LISTENER_H
 
@@ -11,6 +10,7 @@
 namespace hpt {
 
 class IoServicePool;
+class RpcServerStream;
 
 class RpcListener : public std::enable_shared_from_this<RpcListener>
 {
@@ -19,7 +19,7 @@ class RpcListener : public std::enable_shared_from_this<RpcListener>
     static const int LISTEN_MAX_CONNECTIONS;
 public:
 
-    RpcListener(IoServicePool& io_service_pool, const Endpoint& endpoint);
+    RpcListener(IoServicePool& io_service_pool, const asio::ip::tcp::endpoint& endpoint);
     ~RpcListener();
 
     void Close();
@@ -29,11 +29,11 @@ public:
 
 private:
     void AsyncAccept();
-    void OnAccept(RpcServerStreamPtr stream, const asio::error_code& error);
+    void OnAccept(std::shared_ptr<RpcServerStream> stream, const asio::error_code& error);
 
     IoServicePool& _io_service_pool;
-    Acceptor _acceptor;
-    Endpoint _endpoint;
+    asio::ip::tcp::acceptor _acceptor;
+    asio::ip::tcp::endpoint _endpoint;
 
     bool _is_closed;
 };

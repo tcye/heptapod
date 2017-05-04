@@ -36,7 +36,7 @@ bool IoThreadGroup::Start()
 
 bool IoThreadGroup::DoStart()
 {
-    _io_service_work = new IoServiceWork(_io_service);
+    _io_service_work = new asio::io_service::work(_io_service);
     for (int i = 0; i < _thread_num; ++i)
     {
         auto thread = new std::thread(&SelfType::RunThread, this);

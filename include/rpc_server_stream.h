@@ -2,7 +2,6 @@
 // Created by tiancai on 2017/4/13.
 //
 
-#pragma once
 #ifndef HEPTAPOD_RPC_SERVER_STREAM_H
 #define HEPTAPOD_RPC_SERVER_STREAM_H
 
@@ -18,13 +17,13 @@ class RpcServerStream : public std::enable_shared_from_this<RpcServerStream>
     static const int READ_SIZE;
 
 public:
-    RpcServerStream(IoService& io_service);
+    RpcServerStream(asio::io_service& io_service);
     ~RpcServerStream();
 
     void SetSocketConnected();
     void Close();
 
-    Socket& socket() { return _socket; }
+    asio::ip::tcp::socket& socket() { return _socket; }
 
 private:
     void TriggerReceive();
@@ -34,7 +33,7 @@ private:
 
     void OnReadSome(const asio::error_code& error, std::size_t transferred_size);
 
-    Socket _socket;
+    asio::ip::tcp::socket _socket;
     msgpack::unpacker _unpacker;
     std::atomic_bool _is_closed;
 };

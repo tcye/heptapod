@@ -4,7 +4,7 @@
 
 #include <thread>
 #include <csignal>
-#include "wait_signal_func.h"
+#include "enable_wait_signal.h"
 
 using namespace std::chrono_literals;
 
@@ -16,7 +16,7 @@ static void SignalHandler(int /*sig*/)
     s_quit = true;
 }
 
-void WaitSignalFunc::WaitSignal()
+void EnableWaitSignal::WaitSignal()
 {
     std::signal(SIGINT, SignalHandler);
     std::signal(SIGTERM, SignalHandler);

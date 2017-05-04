@@ -2,11 +2,9 @@
 // Created by tiancai on 2017/3/10.
 //
 
-#pragma once
 #ifndef HEPTAPOD_IO_SERVICE_POOL_H
 #define HEPTAPOD_IO_SERVICE_POOL_H
 
-#include <vector>
 #include "common.h"
 
 namespace hpt {
@@ -23,7 +21,7 @@ public:
     bool Run();
     void Stop();
 
-    IoService& GetIoService();
+    asio::io_service& GetIoService();
 
 private:
     std::vector<IoThreadGroup*> _pool;

@@ -2,13 +2,9 @@
 // Created by tiancai on 2017/3/9.
 //
 
-#pragma once
 #ifndef HEPTAPOD_IO_THREAD_GROUP_H
 #define HEPTAPOD_IO_THREAD_GROUP_H
 
-#include <string>
-#include <thread>
-#include <vector>
 #include "common.h"
 
 namespace hpt {
@@ -25,7 +21,7 @@ public:
 
     int thread_num() const { return _thread_num; }
     const std::string& name() const { return _name; }
-    IoService& io_service() { return _io_service; }
+    asio::io_service& io_service() { return _io_service; }
     bool is_running() { return _is_running; }
 
 private:
@@ -33,8 +29,8 @@ private:
     void DoStop();
     void RunThread();
 
-    IoService _io_service;
-    IoServiceWork* _io_service_work;
+    asio::io_service _io_service;
+    asio::io_service::work* _io_service_work;
     std::vector<std::thread*> _threads;
 
     std::string _name;

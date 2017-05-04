@@ -5,13 +5,14 @@
 #ifndef HEPTAPOD_RPC_CLIENT_H
 #define HEPTAPOD_RPC_CLIENT_H
 
-#include <string>
 #include "common.h"
-#include "wait_signal_func.h"
+#include "enable_wait_signal.h"
 
 namespace hpt {
 
-class RpcClient : public WaitSignalFunc
+class IoServicePool;
+
+class RpcClient : public EnableWaitSignal
 {
     HPT_CLASS(RpcClient)
 public:
@@ -27,7 +28,7 @@ private:
 private:
     IoServicePool& _io_service_pool;
     std::atomic_bool _is_closed;
-    Socket _socket;
+    asio::ip::tcp::socket _socket;
 };
 
 } // namespace hpt

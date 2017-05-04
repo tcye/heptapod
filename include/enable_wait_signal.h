@@ -7,7 +7,7 @@
 
 namespace hpt {
 
-class WaitSignalFunc
+class EnableWaitSignal
 {
 public:
     void WaitSignal();

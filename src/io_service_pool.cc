@@ -45,7 +45,7 @@ void IoServicePool::Stop()
     }
 }
 
-IoService& IoServicePool::GetIoService()
+asio::io_service& IoServicePool::GetIoService()
 {
     if (_next_service >= _pool.size())
         _next_service = 0;

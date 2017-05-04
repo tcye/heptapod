@@ -9,7 +9,7 @@ namespace hpt {
 
 const int RpcServerStream::READ_SIZE = 65536;
 
-RpcServerStream::RpcServerStream(IoService& io_service) : _socket(io_service), _is_closed(true)
+RpcServerStream::RpcServerStream(asio::io_service& io_service) : _socket(io_service), _is_closed(true)
 {
 
 }

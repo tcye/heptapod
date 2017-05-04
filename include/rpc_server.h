@@ -2,18 +2,20 @@
 // Created by tiancai on 2017/3/8.
 //
 
-#pragma once
 #ifndef HEPTAPOD_SERVER_H
 #define HEPTAPOD_SERVER_H
 
 #include <string>
 #include <mutex>
 #include "common.h"
-#include "wait_signal_func.h"
+#include "enable_wait_signal.h"
 
 namespace hpt {
 
-class RpcServer : public WaitSignalFunc
+class IoServicePool;
+class RpcListener;
+
+class RpcServer : public EnableWaitSignal
 {
     HPT_CLASS(RpcServer)
 public:
@@ -26,7 +28,7 @@ public:
 
 private:
     IoServicePool& _io_service_pool;
-    RpcListenerPtr _listener;
+    std::shared_ptr<RpcListener> _listener;
     bool _is_running;
     std::mutex _start_stop_lock;
 
