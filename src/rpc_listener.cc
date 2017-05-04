@@ -84,6 +84,7 @@ void RpcListener::AsyncAccept()
 {
     auto stream = std::make_shared<RpcServerStream>(_io_service_pool.GetIoService());
     _acceptor.async_accept(stream->socket(), MEM_FN(OnAccept, stream, _1));
+    stream->set_status(RpcServerStream::STATUS_CONNECTING);
 }
 
 void RpcListener::OnAccept(std::shared_ptr<RpcServerStream> stream, const asio::error_code& ec)
