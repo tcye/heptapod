@@ -14,7 +14,7 @@ RpcListener::RpcListener(IoServicePool& io_service_pool,
         : _io_service_pool(io_service_pool),
           _endpoint(endpoint),
           _acceptor(io_service_pool.GetIoService()),
-          _is_closed(true)
+          _status(STATUS_INIT)
 {
 
 }
@@ -26,45 +26,58 @@ RpcListener::~RpcListener()
 
 void RpcListener::Close()
 {
-    if (_is_closed)
-        return;
-
-    _acceptor.cancel();
-    _acceptor.close();
-    _is_closed = true;
+    if (_status.exchange(STATUS_CLOSED) != STATUS_CLOSED)
+    {
+        _acceptor.cancel();
+        _acceptor.close();
+        logger()->info("Close: closed");
+    }
+    else
+    {
+        logger()->info("Close: duplicated close operation");
+    }
 }
 
 bool RpcListener::StartListen()
 {
-    asio::error_code ec;
-    _acceptor.open(_endpoint.protocol(), ec);
-    if (ec)
+    int expected_status = STATUS_INIT;
+    if (_status.compare_exchange_strong(expected_status, STATUS_LISTENING))
     {
-        logger()->error("StartListen, open failed! reason: {}", ec.message());
-        return false;
-    }
-    _acceptor.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec);
-    if (ec)
-    {
-        logger()->error("StartListen, set reuse address failed! reason: {}", ec.message());
-        return false;
-    }
-    _acceptor.bind(_endpoint, ec);
-    if (ec)
-    {
-        logger()->error("StartListen, bind failed! reason: {}", ec.message());
-        return false;
-    }
-    _acceptor.listen(LISTEN_MAX_CONNECTIONS, ec);
-    if (ec)
-    {
-        logger()->error("StartListen, listen failed! reason: {}", ec.message());
-        return false;
-    }
+        asio::error_code ec;
+        _acceptor.open(_endpoint.protocol(), ec);
+        if (ec)
+        {
+            logger()->error("StartListen: open failed, reason: {}", ec.message());
+            return false;
+        }
+        _acceptor.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec);
+        if (ec)
+        {
+            logger()->error("StartListen: set_option failed, reason: {}", ec.message());
+            return false;
+        }
+        _acceptor.bind(_endpoint, ec);
+        if (ec)
+        {
+            logger()->error("StartListen: bind failed, reason: {}", ec.message());
+            return false;
+        }
+        _acceptor.listen(LISTEN_MAX_CONNECTIONS, ec);
+        if (ec)
+        {
+            logger()->error("StartListen: listen failed, reason: {}", ec.message());
+            return false;
+        }
 
-    AsyncAccept();
-    _is_closed = false;
-    return true;
+        AsyncAccept();
+        logger()->info("StartListen: succeeded");
+        return true;
+    }
+    else
+    {
+        logger()->error("StartListen: check status failed! last status is {}", expected_status);
+        return false;
+    }
 }
 
 void RpcListener::AsyncAccept()
@@ -73,22 +86,16 @@ void RpcListener::AsyncAccept()
     _acceptor.async_accept(stream->socket(), MEM_FN(OnAccept, stream, _1));
 }
 
-void RpcListener::OnAccept(std::shared_ptr<RpcServerStream> stream, const asio::error_code& error)
+void RpcListener::OnAccept(std::shared_ptr<RpcServerStream> stream, const asio::error_code& ec)
 {
-    if (error)
+    if (ec)
     {
-        logger()->error("OnAccept failed! reason: {}", error.message());
+        logger()->error("OnAccept: failed, reason: {}", ec.message());
         Close();
         return;
     }
 
-    if (_is_closed)
-    {
-        logger()->info("OnAccept listener already closed.");
-        return;
-    }
-
-    logger()->info("OnAccept");
+    logger()->info("OnAccept: succeeded");
     stream->SetSocketConnected();
     AsyncAccept();
 }

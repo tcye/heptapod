@@ -29,7 +29,8 @@ private:
     asio::ip::tcp::socket _socket;
     msgpack::unpacker _unpacker;
 
-    enum {
+    enum
+    {
         STATUS_INIT = 0,
         STATUS_CONNECTING = 1,
         STATUS_CONNECTED = 2,

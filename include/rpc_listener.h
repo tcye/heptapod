@@ -25,8 +25,6 @@ public:
     void Close();
     bool StartListen();
 
-    bool is_closed() { return _is_closed; }
-
 private:
     void AsyncAccept();
     void OnAccept(std::shared_ptr<RpcServerStream> stream, const asio::error_code& error);
@@ -35,7 +33,14 @@ private:
     asio::ip::tcp::acceptor _acceptor;
     asio::ip::tcp::endpoint _endpoint;
 
-    bool _is_closed;
+    enum
+    {
+        STATUS_INIT = 0,
+        STATUS_LISTENING = 1,
+        STATUS_CLOSED = 2,
+    };
+
+    std::atomic_int _status;
 };
 
 } //namespace hpt
