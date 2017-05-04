@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "rpc_stream.h"
+#include "rpc_stream_manager.h"
 
 namespace hpt {
 
@@ -11,17 +12,18 @@ const int RpcStream::MAX_READ_SIZE_PER_TIME = 65536;
 
 RpcStream::RpcStream(asio::io_service& io_service) : _socket(io_service), _status(STATUS_INIT)
 {
-
+    RpcStreamManager::Instance().Add(this);
 }
 
 RpcStream::~RpcStream()
 {
+    RpcStreamManager::Instance().Del(this);
     Close();
 }
 
 void RpcStream::Close()
 {
-    if (_status.exchange(STATUS_CLOSED) != STATUS_CONNECTED)
+    if (_status.exchange(STATUS_CLOSED) == STATUS_CONNECTED)
     {
         _socket.shutdown(asio::ip::tcp::socket::shutdown_both);
         _socket.close();
@@ -84,7 +86,7 @@ void RpcStream::OnReadSome(const asio::error_code& ec, std::size_t transferred_s
         std::cout << obj << std::endl;
     }
 
-    if (_status != STATUS_CLOSED)
+    if (_status == STATUS_CONNECTED)
     {
         TryReadSome();
     }

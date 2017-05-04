@@ -8,6 +8,8 @@
 #include "rpc_server.h"
 #include "rpc_listener.h"
 #include "io_service_pool.h"
+#include "rpc_stream.h"
+#include "rpc_stream_manager.h"
 
 using namespace std::chrono_literals;
 
@@ -52,6 +54,12 @@ void RpcServer::Stop()
 
     _listener->Close();
     _listener.reset();
+
+    for (auto stream : RpcStreamManager::Instance())
+    {
+        stream->Close();
+    }
+
     _is_running = false;
 }
 
