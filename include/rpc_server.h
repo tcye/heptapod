@@ -8,14 +8,14 @@
 #include <string>
 #include <mutex>
 #include "common.h"
-#include "enable_wait_signal.h"
+#include "rpc_side.h"
 
 namespace hpt {
 
 class IoServicePool;
 class RpcListener;
 
-class RpcServer : public EnableWaitSignal
+class RpcServer : public RpcSide
 {
     HPT_CLASS(RpcServer)
 public:

@@ -6,14 +6,14 @@
 #define HEPTAPOD_RPC_CLIENT_H
 
 #include "common.h"
-#include "enable_wait_signal.h"
+#include "rpc_side.h"
 
 namespace hpt {
 
 class IoServicePool;
 class RpcClientStream;
 
-class RpcClient : public EnableWaitSignal
+class RpcClient : public RpcSide
 {
     HPT_CLASS(RpcClient)
 public:

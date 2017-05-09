@@ -4,7 +4,10 @@
 
 #include <thread>
 #include <csignal>
-#include "enable_wait_signal.h"
+#include "common.h"
+#include "io_service_pool.h"
+#include "rpc_dispatcher.h"
+#include "rpc_side.h"
 
 using namespace std::chrono_literals;
 
@@ -16,7 +19,7 @@ static void SignalHandler(int /*sig*/)
     s_quit = true;
 }
 
-void EnableWaitSignal::WaitSignal()
+void RpcSide::WaitSignal()
 {
     std::signal(SIGINT, SignalHandler);
     std::signal(SIGTERM, SignalHandler);
@@ -25,6 +28,21 @@ void EnableWaitSignal::WaitSignal()
     {
         std::this_thread::sleep_for(1s);
     }
+}
+
+RpcSide::RpcSide(IoServicePool& io_service_pool) : _io_service_pool(io_service_pool)
+{
+
+}
+
+RpcSide::~RpcSide()
+{
+
+}
+
+void RpcSide::Dispatch(RpcStream& s, const msgpack::object& object)
+{
+    _rpc_dispatcher.Dispatch(object);
 }
 
 }

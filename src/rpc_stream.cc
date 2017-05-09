@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "rpc_side.h"
 #include "rpc_stream.h"
 #include "rpc_stream_manager.h"
 
@@ -10,7 +11,8 @@ namespace hpt {
 
 const int RpcStream::MAX_READ_SIZE_PER_TIME = 65536;
 
-RpcStream::RpcStream(asio::io_service& io_service) : _socket(io_service), _status(STATUS_INIT)
+RpcStream::RpcStream(RpcSide& side, asio::io_service& io_service)
+    : _rpc_side(side), _socket(io_service), _status(STATUS_INIT)
 {
     RpcStreamManager::Instance().Add(this);
 }
@@ -83,7 +85,7 @@ void RpcStream::OnReadSome(const asio::error_code& ec, std::size_t transferred_s
     while (_unpacker.next(result))
     {
         msgpack::object obj(result.get());
-        std::cout << obj << std::endl;
+        _rpc_side.Dispatch(*this, obj);
     }
 
     if (_status == STATUS_CONNECTED)

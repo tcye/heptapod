@@ -10,6 +10,8 @@
 
 namespace hpt {
 
+class RpcSide;
+
 class RpcStream : public std::enable_shared_from_this<RpcStream>
 {
     HPT_CLASS(RpcStream)
@@ -23,7 +25,7 @@ public:
         STATUS_CLOSED = 3,
     };
 
-    RpcStream(asio::io_service& io_service);
+    RpcStream(RpcSide& side, asio::io_service& io_service);
     ~RpcStream();
 
     void SetSocketConnected();
@@ -42,6 +44,8 @@ private:
     asio::ip::tcp::socket _socket;
     msgpack::unpacker _unpacker;
     std::atomic_int _status;
+
+    RpcSide& _rpc_side;
 };
 
 } // namespace hpt
