@@ -11,8 +11,8 @@ namespace hpt {
 
 const int RpcStream::MAX_READ_SIZE_PER_TIME = 65536;
 
-RpcStream::RpcStream(RpcSide& side, asio::io_service& io_service)
-    : _rpc_side(side), _socket(io_service), _status(STATUS_INIT)
+RpcStream::RpcStream(RpcSide& side)
+    : _rpc_side(side), _socket(side.GetIoService()), _status(STATUS_INIT)
 {
     RpcStreamManager::Instance().Add(this);
 }

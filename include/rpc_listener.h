@@ -9,6 +9,7 @@
 
 namespace hpt {
 
+class RpcServer;
 class IoServicePool;
 class RpcServerStream;
 
@@ -19,7 +20,7 @@ class RpcListener : public std::enable_shared_from_this<RpcListener>
     static const int LISTEN_MAX_CONNECTIONS;
 public:
 
-    RpcListener(IoServicePool& io_service_pool, const asio::ip::tcp::endpoint& endpoint);
+    RpcListener(RpcServer& server, const asio::ip::tcp::endpoint& endpoint);
     ~RpcListener();
 
     void Close();
@@ -29,7 +30,7 @@ private:
     void AsyncAccept();
     void OnAccept(std::shared_ptr<RpcServerStream> stream, const asio::error_code& error);
 
-    IoServicePool& _io_service_pool;
+    RpcServer& _server;
     asio::ip::tcp::acceptor _acceptor;
     asio::ip::tcp::endpoint _endpoint;
 

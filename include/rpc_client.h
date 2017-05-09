@@ -27,7 +27,6 @@ private:
     void OnConnect(const asio::error_code& error);
 
 private:
-    IoServicePool& _io_service_pool;
     std::atomic_bool _is_closed;
     std::shared_ptr<RpcClientStream> _rpc_stream;
 };

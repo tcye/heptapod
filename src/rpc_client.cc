@@ -9,7 +9,7 @@
 namespace hpt {
 
 RpcClient::RpcClient(IoServicePool& io_service_pool)
-    : _io_service_pool(io_service_pool), _is_closed(false)
+    : RpcSide(io_service_pool), _is_closed(false)
 {
 
 }
@@ -29,7 +29,7 @@ void RpcClient::Shutdown()
 
 bool RpcClient::Connect(const std::string& address, uint16_t port)
 {
-    _rpc_stream = std::make_shared<RpcClientStream>(_io_service_pool.GetIoService());
+    _rpc_stream = std::make_shared<RpcClientStream>(*this);
     _rpc_stream->socket().async_connect(MakeEndpoint(address, port), MEM_FN_UNSAFE(OnConnect, _1));
     _rpc_stream->set_status(RpcClientStream::STATUS_CONNECTING);
 }

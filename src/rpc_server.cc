@@ -16,7 +16,7 @@ using namespace std::chrono_literals;
 namespace hpt {
 
 RpcServer::RpcServer(IoServicePool& io_service_pool)
-    : _is_running(false), _io_service_pool(io_service_pool)
+    : RpcSide(io_service_pool), _is_running(false)
 {
 
 }
@@ -33,7 +33,7 @@ bool RpcServer::Start(const std::string& address, uint16_t port)
     if (_is_running)
         return true;
 
-    _listener = std::make_shared<RpcListener>(_io_service_pool, hpt::MakeEndpoint(address, port));
+    _listener = std::make_shared<RpcListener>(*this, hpt::MakeEndpoint(address, port));
 
     if (!_listener->StartListen())
     {

@@ -2,18 +2,18 @@
 // Created by tiancai on 2017/3/14.
 //
 #include "rpc_listener.h"
-#include "io_service_pool.h"
+#include "rpc_server.h"
 #include "rpc_server_stream.h"
 
 namespace hpt {
 
 const int RpcListener::LISTEN_MAX_CONNECTIONS = 4096;
 
-RpcListener::RpcListener(IoServicePool& io_service_pool,
+RpcListener::RpcListener(RpcServer& server,
                          const asio::ip::tcp::endpoint& endpoint)
-        : _io_service_pool(io_service_pool),
+        : _server(server),
           _endpoint(endpoint),
-          _acceptor(io_service_pool.GetIoService()),
+          _acceptor(server.GetIoService()),
           _status(STATUS_INIT)
 {
 
@@ -78,7 +78,7 @@ bool RpcListener::StartListen()
 
 void RpcListener::AsyncAccept()
 {
-    auto stream = std::make_shared<RpcServerStream>(_io_service_pool.GetIoService());
+    auto stream = std::make_shared<RpcServerStream>(_server);
     _acceptor.async_accept(stream->socket(), MEM_FN(OnAccept, stream, _1));
     stream->set_status(RpcServerStream::STATUS_CONNECTING);
 }

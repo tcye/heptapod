@@ -25,7 +25,7 @@ public:
         STATUS_CLOSED = 3,
     };
 
-    RpcStream(RpcSide& side, asio::io_service& io_service);
+    RpcStream(RpcSide& side);
     ~RpcStream();
 
     void SetSocketConnected();

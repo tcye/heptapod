@@ -6,6 +6,7 @@
 #define HEPTAPOD_WAIT_SIGNAL_H
 
 #include "rpc_dispatcher.h"
+#include "io_service_pool.h"
 
 namespace hpt {
 
@@ -23,6 +24,9 @@ public:
 
     void Dispatch(RpcStream& s, const msgpack::object& object);
     template <typename F> void Bind(const std::string& name, F func);
+
+    asio::io_service& GetIoService() { return _io_service_pool.GetIoService(); }
+    IoServicePool& io_service_pool() { return _io_service_pool; }
 
 protected:
     IoServicePool& _io_service_pool;

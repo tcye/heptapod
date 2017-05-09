@@ -27,7 +27,6 @@ public:
     void Stop();
 
 private:
-    IoServicePool& _io_service_pool;
     std::shared_ptr<RpcListener> _listener;
     bool _is_running;
     std::mutex _start_stop_lock;
