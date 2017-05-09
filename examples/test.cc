@@ -3,28 +3,19 @@
 //
 
 #include <iostream>
+#include "rpc_dispatcher.h"
 
-class Base
+void hello(std::string test)
 {
-    void f()
-    {
-        std::cout << "Base::f" << std::endl;
-    }
-};
 
-class Dev : public Base
-{
-    int a;
-};
+}
 
 int main(int argc, char** argv)
 {
-    Base b;
-    Dev d;
+    hpt::RpcDispatcher d;
 
-    std::cout << sizeof(Base) << sizeof(Dev);
-
-
+//    d.Bind("hello", [](std::string text){ });
+    d.Bind("hello", hello);
 
     return 0;
 }

@@ -59,6 +59,7 @@ void RpcServer::Stop()
     {
         stream->Close();
     }
+    RpcStreamManager::Instance().Clear();
 
     _is_running = false;
 }

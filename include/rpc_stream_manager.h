@@ -22,6 +22,8 @@ public:
 
     void Add(RpcStream* s) { _streams.insert(s); }
     void Del(RpcStream* s) { _streams.erase(s); }
+    void Clear() { _streams.clear(); }
+    void Size() { _streams.size(); }
 
     std::unordered_set<RpcStream*>& streams() { return _streams; }
     auto begin() { return _streams.begin(); }
