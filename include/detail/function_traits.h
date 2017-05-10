@@ -42,6 +42,12 @@ struct FunctionTraits<Ret(ClassType::*)(Args...)> : FunctionTraits<Ret(*)(Args..
 
 };
 
+template<typename ClassType, typename Ret, typename... Args>
+struct FunctionTraits<Ret(ClassType::*)(Args...) const> : FunctionTraits<Ret(*)(Args...)>
+{
+
+};
+
 template<typename Ret, typename... Args>
 struct FunctionTraits<Ret(*)(Args...)>
 {

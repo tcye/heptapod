@@ -2,6 +2,7 @@
 // Created by tiancai on 2017/4/19.
 //
 
+#include <tuple>
 #include "rpc_client.h"
 #include "rpc_client_stream.h"
 #include "io_service_pool.h"
@@ -46,7 +47,7 @@ void RpcClient::OnConnect(const asio::error_code& ec)
     logger()->info("OnConnect: Success!");
     _rpc_stream->SetSocketConnected();
 
-    std::string s = "hello world";
+    auto s = std::make_tuple("echo", std::make_tuple("hello world"));
     msgpack::sbuffer buf;
     msgpack::pack(buf, s);
     _rpc_stream->socket().write_some(asio::buffer(buf.data(), buf.size()));
