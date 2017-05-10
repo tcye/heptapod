@@ -31,6 +31,9 @@ public:
     void SetSocketConnected();
     void Close();
 
+    template <typename... Args>
+    void CallRemote(const std::string& name, Args... args);
+
     asio::ip::tcp::socket& socket() { return _socket; }
     int status() { return _status; }
     void set_status(int status) { _status = status; }
@@ -47,6 +50,15 @@ private:
 
     RpcSide& _rpc_side;
 };
+
+template <typename... Args>
+void RpcStream::CallRemote(const std::string& name, Args... args)
+{
+    auto pkg = std::make_tuple<std::string, std::tuple<Args...>>(name, std::make_tuple(args...));
+    msgpack::sbuffer buf;
+    msgpack::pack(buf, pkg);
+    _rpc_stream->socket().write_some(asio::buffer(buf.data(), buf.size()));
+}
 
 } // namespace hpt
 
