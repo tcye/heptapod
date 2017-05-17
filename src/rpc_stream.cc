@@ -12,7 +12,10 @@ namespace hpt {
 const int RpcStream::MAX_READ_SIZE_PER_TIME = 65536;
 
 RpcStream::RpcStream(RpcSide& side)
-    : _rpc_side(side), _socket(side.GetIoService()), _status(STATUS_INIT)
+    : _rpc_side(side),
+      _socket(side.GetIoService()),
+      _write_strand(side.GetIoService()),
+      _status(STATUS_INIT)
 {
     RpcStreamManager::Instance().Add(this);
 }
@@ -91,6 +94,25 @@ void RpcStream::OnReadSome(const asio::error_code& ec, std::size_t transferred_s
     if (_status == STATUS_CONNECTED)
     {
         TryReadSome();
+    }
+}
+
+void RpcStream::DoCallRemote(std::shared_ptr<msgpack::sbuffer> buf)
+{
+    _socket.async_write_some(asio::buffer(buf->data(), buf->size()),
+                             _write_strand.wrap(MEM_FN(OnWriteSome, _1, _2)));
+    _write_queue.push_back(std::move(*buf));
+}
+
+void RpcStream::OnWriteSome(const asio::error_code& ec, std::size_t transferred_size)
+{
+    _bytes_written += transferred_size;
+
+    size_t front_buf_size = _write_queue.front().size();
+    if (_bytes_written >= front_buf_size)
+    {
+        _write_queue.pop_front();
+        _bytes_written -= front_buf_size;
     }
 }
 

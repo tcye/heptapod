@@ -39,14 +39,19 @@ public:
     void set_status(int status) { _status = status; }
 
 private:
+    void DoCallRemote(std::shared_ptr<msgpack::sbuffer> buf);
     void TriggerReceive();
     void TriggerSend();
     void TryReadSome();
-    void OnReadSome(const asio::error_code& error, std::size_t transferred_size);
+    void OnReadSome(const asio::error_code& ec, std::size_t transferred_size);
+    void OnWriteSome(const asio::error_code& ec, std::size_t transferred_size);
 
     asio::ip::tcp::socket _socket;
     msgpack::unpacker _unpacker;
     std::atomic_int _status;
+    asio::strand _write_strand;
+    size_t _bytes_written;
+    std::deque<msgpack::sbuffer> _write_queue;
 
     RpcSide& _rpc_side;
 };
@@ -54,10 +59,10 @@ private:
 template <typename... Args>
 void RpcStream::CallRemote(const std::string& name, Args... args)
 {
-    auto pkg = std::make_tuple<std::string, std::tuple<Args...>>(name, std::make_tuple(args...));
-    msgpack::sbuffer buf;
-    msgpack::pack(buf, pkg);
-    _rpc_stream->socket().write_some(asio::buffer(buf.data(), buf.size()));
+    auto pkg = std::make_tuple(name, std::make_tuple(args...));
+    auto buf = std::make_shared<msgpack::sbuffer>();
+    msgpack::pack(*buf, pkg);
+    _write_strand.dispatch(MEM_FN(DoCallRemote, buf));
 }
 
 } // namespace hpt
