@@ -33,6 +33,7 @@ bool RpcClient::Connect(const std::string& address, uint16_t port)
     _rpc_stream = std::make_shared<RpcClientStream>(*this);
     _rpc_stream->socket().async_connect(MakeEndpoint(address, port), MEM_FN_UNSAFE(OnConnect, _1));
     _rpc_stream->set_status(RpcClientStream::STATUS_CONNECTING);
+	return true;
 }
 
 void RpcClient::OnConnect(const asio::error_code& ec)
@@ -47,10 +48,7 @@ void RpcClient::OnConnect(const asio::error_code& ec)
     logger()->info("OnConnect: Success!");
     _rpc_stream->SetSocketConnected();
 
-    auto s = std::make_tuple("echo", std::make_tuple("hello world"));
-    msgpack::sbuffer buf;
-    msgpack::pack(buf, s);
-    _rpc_stream->socket().write_some(asio::buffer(buf.data(), buf.size()));
+    _rpc_stream->CallRemote("echo", "helloworld");
 }
 
 } // namespace hpt

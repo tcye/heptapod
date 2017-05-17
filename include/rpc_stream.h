@@ -54,6 +54,7 @@ private:
     std::deque<msgpack::sbuffer> _write_queue;
 
     RpcSide& _rpc_side;
+
 };
 
 template <typename... Args>
