@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by tiancai on 2017/5/9.
 //
 
@@ -11,16 +11,16 @@ namespace hpt {
 namespace detail {
 
 
-template<typename F, typename... Args, std::size_t... I>
-decltype(auto) Call(F func, std::tuple<Args...>&& args, std::index_sequence<I...>)
+template<typename Ret, typename ClassType, typename... Args, std::size_t... I>
+Ret CallHelper(Ret(ClassType::*func)(Args...), ClassType* s, std::tuple<std::decay_t<Args>...>&& args, std::index_sequence<I...>)
 {
-    return func(std::get<I>(args)...);
+    return (s->*func)(std::get<I>(args)...);
 }
 
-template<typename F, typename... Args>
-decltype(auto) Call(F func, std::tuple<Args...>& args)
+template<typename Ret, typename ClassType, typename... Args>
+Ret Call(Ret(ClassType::*func)(Args...), ClassType* s, std::tuple<std::decay_t<Args>...>& args)
 {
-    return Call(func, std::forward<std::tuple<Args...>>(args), std::index_sequence_for<Args...>{});
+    return CallHelper(func, s, std::forward<std::tuple<std::decay_t<Args>...>>(args), std::index_sequence_for<Args...>{});
 };
 
 } // namespace detail

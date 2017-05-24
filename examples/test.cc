@@ -1,21 +1,50 @@
-//
+﻿//
 // Created by tiancai on 2017/4/12.
 //
 
 #include <iostream>
-#include "rpc_dispatcher.h"
+#include "rpc_connection.h"
 
-void hello(std::string test)
+
+class EchoService : public hpt::RpcConnection<EchoService>
 {
+public:
+    static void InitServiceMap()
+    {
+        Bind("Echo", &EchoService::Echo);
+    }
 
-}
+    void Echo(std::string s)
+    {
+        std::cout << s << std::endl;
+    }
+};
+
+//class EchoService
+//{
+//public:
+//    void Echo(std::string) {}
+//};
+
+
+//template <typename F>
+//void PrintFuncTypes(F f)
+//{
+//    using hello = hpt::detail::FunctionTraits<F>::DecayedArgs;
+//    std::cout << typeid(hello).name() << std::endl;
+//}
+
 
 int main(int argc, char** argv)
 {
-    hpt::RpcDispatcher d;
+    EchoService::InitServiceMap();
+    auto s = std::make_shared<EchoService>();
 
-//    d.Bind("hello", [](std::string text){ });
-    d.Bind("hello", hello);
-
+    auto pkg = std::make_tuple("Echo", std::make_tuple("hello world"));
+    msgpack::zone z;
+    msgpack::object obj(pkg, z);
+    s->Dispatch(obj);
+    int i;
+    std::cin >> i;
     return 0;
 }

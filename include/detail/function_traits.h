@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by tiancai on 2017/4/19.
 //
 
@@ -33,19 +33,18 @@ struct IsAllConstRef<T>
 template<typename T>
 struct FunctionTraits : FunctionTraits<decltype(&T::operator())>
 {
-
 };
 
-template<typename ClassType, typename Ret, typename... Args>
-struct FunctionTraits<Ret(ClassType::*)(Args...)> : FunctionTraits<Ret(*)(Args...)>
+template<typename C, typename Ret, typename... Args>
+struct FunctionTraits<Ret(C::*)(Args...)> : FunctionTraits<Ret(*)(Args...)>
 {
-
+    using ClassType = C;
 };
 
-template<typename ClassType, typename Ret, typename... Args>
-struct FunctionTraits<Ret(ClassType::*)(Args...) const> : FunctionTraits<Ret(*)(Args...)>
+template<typename C, typename Ret, typename... Args>
+struct FunctionTraits<Ret(C::*)(Args...) const> : FunctionTraits<Ret(*)(Args...)>
 {
-
+    using ClassType = C;
 };
 
 template<typename Ret, typename... Args>
@@ -53,6 +52,7 @@ struct FunctionTraits<Ret(*)(Args...)>
 {
     static constexpr int Arity = sizeof...(Args);
     using ResultType = Ret;
+    using ClassType = void;
 
     template<size_t I>
     struct Arg
@@ -60,7 +60,7 @@ struct FunctionTraits<Ret(*)(Args...)>
         using Type = typename std::tuple_element<I, std::tuple<Args...>>::type;
     };
 
-    using DecayedArgs = typename std::tuple<std::decay_t<Args>...>;
+    using DecayedArgs = std::tuple<std::decay_t<Args>...>;
 };
 
 } // namespace detail
