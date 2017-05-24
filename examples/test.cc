@@ -9,6 +9,7 @@
 class EchoService : public hpt::RpcConnection<EchoService>
 {
 public:
+    using hpt::RpcConnection<EchoService>::RpcConnection;
     static void InitServiceMap()
     {
         Bind("Echo", &EchoService::Echo);
@@ -16,16 +17,10 @@ public:
 
     void Echo(std::string s)
     {
+        CallRemote("Echo", s);
         std::cout << s << std::endl;
     }
 };
-
-//class EchoService
-//{
-//public:
-//    void Echo(std::string) {}
-//};
-
 
 //template <typename F>
 //void PrintFuncTypes(F f)
@@ -38,7 +33,9 @@ public:
 int main(int argc, char** argv)
 {
     EchoService::InitServiceMap();
+    asio::io_service io_service;
     auto s = std::make_shared<EchoService>();
+    s->CallRemote("Echo", "world");
 
     auto pkg = std::make_tuple("Echo", std::make_tuple("hello world"));
     msgpack::zone z;

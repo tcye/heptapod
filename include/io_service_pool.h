@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by tiancai on 2017/3/10.
 //
 
@@ -15,7 +15,7 @@ class IoServicePool
 {
     HPT_CLASS(IoServicePool)
 public:
-    IoServicePool(std::size_t pool_size, std::size_t pool_thread_num);
+    explicit IoServicePool(std::size_t pool_size = 2, std::size_t pool_thread_num = 2);
     ~IoServicePool();
 
     bool Run();
@@ -25,7 +25,7 @@ public:
 
 private:
     std::vector<IoThreadGroup*> _pool;
-    std::size_t _next_service;
+    size_t _next_service;
 };
 
 }

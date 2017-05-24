@@ -25,14 +25,6 @@ add_library(fmt dependencies/src/fmt/format.cc dependencies/src/fmt/ostream.cc d
 add_library(hpt
         src/io_service_pool.cc
         src/io_thread_group.cc
-        src/rpc_server.cc
-        src/rpc_client.cc
-        src/rpc_listener.cc
-        src/rpc_stream.cc
-        src/rpc_server_stream.cc
-        src/rpc_client_stream.cc
-        src/rpc_side.cc
-        src/rpc_dispatcher.cc
         )
 
 if (BUILD_EXAMPLES)

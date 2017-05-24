@@ -1,43 +1,55 @@
-//
+﻿//
 // Created by tiancai on 2017/4/20.
 //
 
 #ifndef HEPTAPOD_WAIT_SIGNAL_H
 #define HEPTAPOD_WAIT_SIGNAL_H
 
-#include "rpc_dispatcher.h"
+#include "signal.h"
+#include <thread>
 #include "io_service_pool.h"
+
+using namespace std::chrono_literals;
 
 namespace hpt {
 
-class IoServicePool;
-class RpcDispatcher;
-class RpcStream;
-
+template <typename ServiceType>
 class RpcSide
 {
 public:
-    RpcSide(IoServicePool& io_service_pool);
-    virtual ~RpcSide();
+    RpcSide()
+    {
+        ServiceType::InitServiceMap();
+        _io_service_pool.Run();
+    }
+    virtual ~RpcSide() { _io_service_pool.Stop(); }
 
-    void WaitSignal();
-
-    void Dispatch(RpcStream& s, const msgpack::object& object);
-    template <typename F> void Bind(const std::string& name, F func);
+    static void WaitSignal()
+    {
+        signal(SIGINT, SignalHandler);
+        signal(SIGTERM, SignalHandler);
+        while (!s_quit)
+        {
+            std::this_thread::sleep_for(1s);
+        }
+    }
 
     asio::io_service& GetIoService() { return _io_service_pool.GetIoService(); }
     IoServicePool& io_service_pool() { return _io_service_pool; }
 
 protected:
-    IoServicePool& _io_service_pool;
-    RpcDispatcher _rpc_dispatcher;
+    IoServicePool _io_service_pool;
+
+private:
+    static void SignalHandler(int /*sig*/)
+    {
+        s_quit = true;
+    }
+    static volatile bool s_quit;
 };
 
-template <typename F>
-void RpcSide::Bind(const std::string& name, F func)
-{
-    _rpc_dispatcher.Bind(name, func);
-}
+template <typename ServiceType>
+bool volatile RpcSide<ServiceType>::s_quit = false;
 
 } // namespace hpt
 

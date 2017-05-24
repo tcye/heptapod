@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by tiancai on 2017/3/9.
 //
 
@@ -13,7 +13,7 @@ class IoThreadGroup
 {
     HPT_CLASS(IoThreadGroup)
 public:
-    IoThreadGroup(std::size_t thread_num, const std::string& name = "");
+    explicit IoThreadGroup(std::size_t thread_num, const std::string& name = "");
     ~IoThreadGroup();
 
     bool Start();
@@ -22,7 +22,7 @@ public:
     int thread_num() const { return _thread_num; }
     const std::string& name() const { return _name; }
     asio::io_service& io_service() { return _io_service; }
-    bool is_running() { return _is_running; }
+    bool is_running() const { return _is_running; }
 
 private:
     bool DoStart();
@@ -33,8 +33,8 @@ private:
     asio::io_service::work* _io_service_work;
     std::vector<std::thread*> _threads;
 
+    size_t _thread_num;
     std::string _name;
-    std::size_t _thread_num;
     bool _is_running;
 };
 

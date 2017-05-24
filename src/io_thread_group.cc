@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by tiancai on 2017/3/9.
 //
 
@@ -8,10 +8,10 @@
 namespace hpt {
 
 IoThreadGroup::IoThreadGroup(std::size_t thread_num, const std::string& name)
-        : _thread_num(thread_num),
-          _name(name),
-          _is_running(false),
-          _io_service_work(nullptr)
+    : _io_service_work(nullptr),
+      _thread_num(thread_num),
+      _name(name),
+      _is_running(false)
 {
     if (_name.empty())
         _name = fmt::format("{:p}", static_cast<void*>(this));
@@ -37,7 +37,7 @@ bool IoThreadGroup::Start()
 bool IoThreadGroup::DoStart()
 {
     _io_service_work = new asio::io_service::work(_io_service);
-    for (int i = 0; i < _thread_num; ++i)
+    for (size_t i = 0; i < _thread_num; ++i)
     {
         auto thread = new std::thread(&SelfType::RunThread, this);
         _threads.push_back(thread);

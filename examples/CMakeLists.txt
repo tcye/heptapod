@@ -9,4 +9,4 @@ add_executable(EchoClient echo_client.cc)
 target_link_libraries(EchoClient asio fmt hpt)
 
 add_executable(Test test.cc)
-target_link_libraries(Test asio fmt hpt)
+target_link_libraries(Test asio fmt)

@@ -1,23 +1,33 @@
-
-#include "io_service_pool.h"
-#include "rpc_server.h"
+﻿
 #include <iostream>
+#include "rpc_connection.h"
+#include "rpc_server.h"
 
+
+class EchoService : public hpt::RpcConnection<EchoService>
+{
+public:
+    static void InitServiceMap()
+    {
+        Bind("Echo", &EchoService::Echo);
+    }
+
+    void OnConnected() override
+    {
+    }
+    
+    void Echo(const std::string& s)
+    {
+        std::cout << s << std::endl;
+        CallRemote("Echo", "Hello from server");
+    }
+};
 
 int main(int argc, char* argv[])
 {
-    hpt::IoServicePool io_service_pool(4, 2);
-    hpt::RpcServer server(io_service_pool);
-
-    server.Bind("echo", [](const std::string& s){ std::cout << "this is echo:" << s << std::endl; });
-
-    io_service_pool.Run();
-
+    hpt::RpcServer<EchoService> server;
     server.Start("127.0.0.1", 8001);
     server.WaitSignal();
     server.Stop();
-
-    io_service_pool.Stop();
-
     return 0;
 }

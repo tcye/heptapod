@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by tiancai on 2017/3/10.
 //
 
@@ -9,7 +9,7 @@
 namespace hpt {
 
 IoServicePool::IoServicePool(std::size_t pool_size, std::size_t pool_thread_num)
-        : _next_service(0)
+    : _next_service(0)
 {
     for (std::size_t i = 0; i < pool_size; ++i)
     {
@@ -54,4 +54,3 @@ asio::io_service& IoServicePool::GetIoService()
 }
 
 }
-
