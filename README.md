@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 ```
 
 客户端：
-```
+``` c++
 class EchoService : public hpt::RpcConnection<EchoService>
 {
 public:
